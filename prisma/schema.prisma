@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String             @id @default(cuid())
+  name              String?
+  email             String             @unique
+  password          String
+  image             String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  tradingAccounts   TradingAccount[]
+  trades            Trade[]
+  payouts           Payout[]
+  psychologyEntries PsychologyEntry[]
+  goals             Goal[]
+  dailyJournals     DailyJournal[]
+  tags              Tag[]
+}
+
+model TradingAccount {
+  id                 String        @id @default(cuid())
+  userId             String
+  name               String
+  broker             String
+  accountType        String
+  startingBalance    Float
+  currentBalance     Float
+  profitTarget       Float
+  dailyDrawdown      Float
+  maxDrawdown        Float
+  minTradingDays     Int           @default(5)
+  status             String        @default("ACTIVE")
+  currency           String        @default("USD")
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades             Trade[]
+  payouts            Payout[]
+  psychologyEntries  PsychologyEntry[]
+
+  @@index([userId])
+}
+
+model Trade {
+  id                 String         @id @default(cuid())
+  userId             String
+  accountId          String
+  symbol             String
+  marketType         String?
+  side               String
+  entryPrice         Float
+  exitPrice          Float?
+  stopLoss           Float?
+  takeProfit         Float?
+  lotSize            Float
+  riskPercent        Float
+  profitLoss         Float
+  status             String?        @default("UNKNOWN")
+  rrRatio            Float?
+  rMultiple          Float?
+  rating             Int?
+  timeframe          String?
+  tradeDate          DateTime
+  session            String
+  strategyTag        String         @default("")
+  emotions           String?
+  mistakes           String?
+  preTradePlan       String?
+  postTradeReflection String?
+  notes              String?
+  beforeScreenshot   String?
+  afterScreenshot    String?
+  annotatedScreenshot String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account            TradingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  psychologyEntries  PsychologyEntry[]
+  tradeImages        TradeImage[]
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([tradeDate])
+}
+
+model TradeImage {
+  id        String   @id @default(cuid())
+  tradeId   String
+  url       String
+  label     String
+  createdAt DateTime @default(now())
+  trade     Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@index([tradeId])
+}
+
+model Payout {
+  id            String         @id @default(cuid())
+  userId        String
+  accountId     String
+  amount        Float
+  date          DateTime
+  status        String         @default("PENDING")
+  paymentMethod String
+  notes         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account       TradingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([accountId])
+}
+
+model PsychologyEntry {
+  id               String          @id @default(cuid())
+  userId           String
+  accountId        String?
+  tradeId          String?
+  date             DateTime
+  emotionsBefore   String
+  emotionsAfter    String
+  confidenceRating Int
+  mistakesMade     String?
+  dailyReflection  String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account          TradingAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  trade            Trade?          @relation(fields: [tradeId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([accountId])
+}
+
+model Goal {
+  id            String       @id @default(cuid())
+  userId        String
+  type          String
+  targetValue   Float
+  currentValue  Float        @default(0)
+  period        String       @default("MONTHLY")
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model DailyJournal {
+  id              String   @id @default(cuid())
+  userId          String
+  date            DateTime
+  preMarketPlan   String?
+  marketNotes     String?
+  eodReflection   String?
+  mood            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  userId    String
+  category  String
+  label     String
+  color     String   @default("#3859F9")
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category, label])
+  @@index([userId])
+}
