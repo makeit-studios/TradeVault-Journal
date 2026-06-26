@@ -1,8 +1,7 @@
 "use server";
 
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
 import { randomUUID } from "crypto";
+import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -52,12 +51,9 @@ async function saveUpload(file: File | null, prefix: string) {
   if (!extension) {
     throw new Error("Only JPG, PNG, WebP, or GIF images are supported.");
   }
-  const bytes = Buffer.from(await file.arrayBuffer());
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
   const fileName = `${prefix}-${randomUUID()}.${extension}`;
-  await writeFile(path.join(uploadDir, fileName), bytes);
-  return `/uploads/${fileName}`;
+  const blob = await put(fileName, file, { access: "public" });
+  return blob.url;
 }
 
 const tradeSchema = z.object({
