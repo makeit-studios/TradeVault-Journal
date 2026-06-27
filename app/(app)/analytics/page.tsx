@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { EquityChart, PnlBarChart, WinLossPie, WinRateChart } from "@/components/charts";
+import { EquityChart, PnlBarChart, WinLossPie, WinRateChart } from "@/components/charts-lazy";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildEquityCurve, buildMonthlyPnl, groupPnlBy } from "@/lib/analytics";
@@ -10,7 +10,7 @@ export default async function AnalyticsPage() {
   const user = await requireUser();
   const [trades, accounts] = await Promise.all([
     prisma.trade.findMany({ where: { userId: user.id }, orderBy: { tradeDate: "asc" } }),
-    prisma.tradingAccount.findMany({ where: { userId: user.id } })
+    prisma.tradingAccount.findMany({ where: { userId: user.id }, select: { startingBalance: true } })
   ]);
   const startingBalance = accounts.reduce((sum, account) => sum + account.startingBalance, 0);
   const wins = trades.filter((trade) => trade.profitLoss > 0).length;

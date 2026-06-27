@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Activity, BadgeDollarSign, Percent, Plus, Scale, Target, TrendingUp } from "lucide-react";
-import { EquityChart } from "@/components/charts";
+import { EquityChart } from "@/components/charts-lazy";
 import { PageHeader } from "@/components/page-header";
 import { Progress } from "@/components/ui/progress";
 import { StatCard } from "@/components/stat-card";

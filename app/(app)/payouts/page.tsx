@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from "react";
 import { format } from "date-fns";
 import { createPayout } from "@/app/actions";
-import { PnlBarChart } from "@/components/charts";
+import { PnlBarChart } from "@/components/charts-lazy";
 import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { Badge } from "@/components/ui/badge";

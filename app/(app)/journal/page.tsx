@@ -19,7 +19,7 @@ export default async function JournalPage() {
   const user = await requireUser();
   const [accounts, trades] = await Promise.all([
     prisma.tradingAccount.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-    prisma.trade.findMany({ where: { userId: user.id }, include: { account: true }, orderBy: { tradeDate: "desc" } })
+    prisma.trade.findMany({ where: { userId: user.id }, include: { account: true }, orderBy: { tradeDate: "desc" }, take: 100 })
   ]);
 
   return (
