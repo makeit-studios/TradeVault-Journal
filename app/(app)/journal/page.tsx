@@ -34,45 +34,70 @@ export default async function JournalPage() {
           </CardHeader>
           <CardContent>
             <form action={createTrade} encType="multipart/form-data" className="grid gap-4">
-              <div className="space-y-2">
-                <Label>Account</Label>
-                <select name="accountId" required className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  {accounts.map((account) => (
-                    <option key={account.id} value={account.id}>{account.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <Field name="symbol" label="Symbol" placeholder="EURUSD" />
-                <div className="space-y-2">
-                  <Label>Side</Label>
-                  <select name="side" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                    <option>BUY</option>
-                    <option>SELL</option>
-                  </select>
-                </div>
-              </div>
+
               <details className="rounded-lg border border-border bg-secondary/20 p-3">
-                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Entry / Exit</summary>
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  <Field name="entryPrice" label="Entry" type="number" step="any" />
-                  <Field name="exitPrice" label="Exit" type="number" step="any" />
-                </div>
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  <Field name="stopLoss" label="Stop loss" type="number" step="any" />
-                  <Field name="takeProfit" label="Take profit" type="number" step="any" />
+                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Account & Advanced</summary>
+                <div className="mt-3 space-y-2">
+                  <Label>Account</Label>
+                  <select name="accountId" required className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                    {accounts.map((account) => (
+                      <option key={account.id} value={account.id}>{account.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                   <Field name="lotSize" label="Lot size" type="number" step="any" />
                   <Field name="riskPercent" label="Risk %" type="number" step="any" />
                 </div>
               </details>
+
+              <p className="text-xs font-semibold text-muted-foreground">Trade Info</p>
               <div className="grid grid-cols-2 gap-3">
-                <Field name="profitLoss" label="Profit / loss" type="number" step="any" />
-                <Field name="tradeDate" label="Trade date" type="date" defaultValue={format(new Date(), "yyyy-MM-dd")} />
+                <Field name="tradeDate" label="Date" type="date" defaultValue={format(new Date(), "yyyy-MM-dd")} />
+                <div className="space-y-2">
+                  <Label>Session</Label>
+                  <select name="session" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                    <option value="">Select session</option>
+                    <option>Asian</option>
+                    <option>London</option>
+                    <option>New York</option>
+                  </select>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
+                <Field name="symbol" label="Instrument" placeholder="EURUSD, XAUUSD, NAS100..." />
                 <div className="space-y-2">
+                  <Label>Direction</Label>
+                  <select name="side" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                    <option>BUY</option>
+                    <option>SELL</option>
+                  </select>
+                </div>
+              </div>
+              <Field name="strategyTag" label="Strategy / Setup" placeholder="Liquidity sweep, FVG, Order block..." />
+
+              <p className="text-xs font-semibold text-muted-foreground">Entry</p>
+              <Field name="entryPrice" label="Entry price" type="number" step="any" />
+
+              <p className="text-xs font-semibold text-muted-foreground">Exit</p>
+              <Field name="exitPrice" label="Exit price" type="number" step="any" />
+
+              <p className="text-xs font-semibold text-muted-foreground">Risk</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field name="stopLoss" label="Stop loss" type="number" step="any" required={false} />
+                <Field name="takeProfit" label="Take profit" type="number" step="any" required={false} />
+              </div>
+
+              <p className="text-xs font-semibold text-muted-foreground">Result</p>
+              <Field name="profitLoss" label="Profit / loss" type="number" step="any" />
+              <div className="rounded-md bg-secondary/40 p-3 text-sm">
+                <p className="text-muted-foreground">R-Multiple</p>
+                <p className="font-medium">Auto-calculated from entry, stop loss, and P/L</p>
+              </div>
+
+              <details className="rounded-lg border border-border bg-secondary/20 p-3">
+                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Notes & Psychology</summary>
+                <div className="mt-3 space-y-2">
                   <Label>Status</Label>
                   <select name="status" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
                     <option value="">Auto (from P/L)</option>
@@ -82,7 +107,7 @@ export default async function JournalPage() {
                     <option>PENDING</option>
                   </select>
                 </div>
-                <div className="space-y-2">
+                <div className="mt-3 space-y-2">
                   <Label>Rating</Label>
                   <div className="flex h-10 items-center gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -93,9 +118,6 @@ export default async function JournalPage() {
                     ))}
                   </div>
                 </div>
-              </div>
-              <details className="rounded-lg border border-border bg-secondary/20 p-3">
-                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Plan & Reflection</summary>
                 <div className="mt-3 space-y-2">
                   <Label>Pre-trade plan</Label>
                   <Textarea name="preTradePlan" placeholder="Confluence, bias, entry trigger, invalidation..." />
@@ -108,9 +130,6 @@ export default async function JournalPage() {
                   <Label>Notes</Label>
                   <Textarea name="notes" placeholder="Execution notes, context, management..." />
                 </div>
-              </details>
-              <details className="rounded-lg border border-border bg-secondary/20 p-3">
-                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Psychology</summary>
                 <div className="mt-3 space-y-2">
                   <Label>Emotions before / during</Label>
                   <TagSelector name="emotions" options={["Calm", "Anxious", "Confident", "Greedy", "Fearful", "Frustrated", "Neutral", "Excited", "Revenge", "Overtrading"]} />
@@ -120,10 +139,7 @@ export default async function JournalPage() {
                   <TagSelector name="mistakes" options={["FOMO", "Sizing too big", "No stop loss", "Moving SL", "Revenge trading", "Overtrading", "Early exit", "Late entry", "Ignoring HTF", "Not following plan"]} />
                 </div>
               </details>
-              <div className="grid grid-cols-2 gap-3">
-                <Field name="session" label="Session" placeholder="London" />
-                <Field name="strategyTag" label="Strategy" placeholder="Liquidity sweep" />
-              </div>
+
               <details className="rounded-lg border border-border bg-secondary/20 p-3">
                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Screenshots</summary>
                 <div className="mt-3 grid grid-cols-2 gap-3">
@@ -134,6 +150,7 @@ export default async function JournalPage() {
                   <ImageUpload name="annotatedScreenshot" label="Annotated chart" />
                 </div>
               </details>
+
               <Button disabled={!accounts.length}>Save trade</Button>
             </form>
           </CardContent>
@@ -151,8 +168,8 @@ export default async function JournalPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Date</TableHead>
-                  <TableHead>Symbol</TableHead>
-                  <TableHead>Side</TableHead>
+                  <TableHead>Instrument</TableHead>
+                  <TableHead>Direction</TableHead>
                   <TableHead>Account</TableHead>
                   <TableHead>Strategy</TableHead>
                   <TableHead className="text-right">P/L</TableHead>

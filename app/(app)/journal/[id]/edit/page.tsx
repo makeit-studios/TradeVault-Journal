@@ -28,42 +28,67 @@ export default async function EditTradePage({ params }: { params: { id: string }
         <CardContent>
           <form action={updateTrade} className="grid gap-4">
             <input type="hidden" name="id" value={trade.id} />
-            <div className="space-y-2">
-              <Label>Account</Label>
-              <select name="accountId" defaultValue={trade.accountId} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
-              </select>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Field name="symbol" label="Symbol" defaultValue={trade.symbol} />
-              <div className="space-y-2">
-                <Label>Side</Label>
-                <select name="side" defaultValue={trade.side} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  <option>BUY</option><option>SELL</option>
-                </select>
-              </div>
-            </div>
+
             <details className="rounded-lg border border-border bg-secondary/20 p-3">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Entry / Exit</summary>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Field name="entryPrice" label="Entry" type="number" step="any" defaultValue={trade.entryPrice} />
-                <Field name="exitPrice" label="Exit" type="number" step="any" defaultValue={trade.exitPrice ?? ""} />
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Field name="stopLoss" label="Stop loss" type="number" step="any" defaultValue={trade.stopLoss ?? ""} />
-                <Field name="takeProfit" label="Take profit" type="number" step="any" defaultValue={trade.takeProfit ?? ""} />
+              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Account & Advanced</summary>
+              <div className="mt-3 space-y-2">
+                <Label>Account</Label>
+                <select name="accountId" defaultValue={trade.accountId} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
+                </select>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <Field name="lotSize" label="Lot size" type="number" step="any" defaultValue={trade.lotSize} />
                 <Field name="riskPercent" label="Risk %" type="number" step="any" defaultValue={trade.riskPercent} />
               </div>
             </details>
+
+            <p className="text-xs font-semibold text-muted-foreground">Trade Info</p>
             <div className="grid grid-cols-2 gap-3">
-              <Field name="profitLoss" label="Profit / loss" type="number" step="any" defaultValue={trade.profitLoss} />
-              <Field name="tradeDate" label="Trade date" type="date" defaultValue={format(trade.tradeDate, "yyyy-MM-dd")} />
+              <Field name="tradeDate" label="Date" type="date" defaultValue={format(trade.tradeDate, "yyyy-MM-dd")} />
+              <div className="space-y-2">
+                <Label>Session</Label>
+                <select name="session" defaultValue={trade.session} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <option value="">Select session</option>
+                  <option>Asian</option>
+                  <option>London</option>
+                  <option>New York</option>
+                </select>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
+              <Field name="symbol" label="Instrument" defaultValue={trade.symbol} />
               <div className="space-y-2">
+                <Label>Direction</Label>
+                <select name="side" defaultValue={trade.side} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <option>BUY</option><option>SELL</option>
+                </select>
+              </div>
+            </div>
+            <Field name="strategyTag" label="Strategy / Setup" defaultValue={trade.strategyTag} />
+
+            <p className="text-xs font-semibold text-muted-foreground">Entry</p>
+            <Field name="entryPrice" label="Entry price" type="number" step="any" defaultValue={trade.entryPrice} />
+
+            <p className="text-xs font-semibold text-muted-foreground">Exit</p>
+            <Field name="exitPrice" label="Exit price" type="number" step="any" defaultValue={trade.exitPrice ?? ""} />
+
+            <p className="text-xs font-semibold text-muted-foreground">Risk</p>
+            <div className="grid grid-cols-2 gap-3">
+              <Field name="stopLoss" label="Stop loss" type="number" step="any" defaultValue={trade.stopLoss ?? ""} required={false} />
+              <Field name="takeProfit" label="Take profit" type="number" step="any" defaultValue={trade.takeProfit ?? ""} required={false} />
+            </div>
+
+            <p className="text-xs font-semibold text-muted-foreground">Result</p>
+            <Field name="profitLoss" label="Profit / loss" type="number" step="any" defaultValue={trade.profitLoss} />
+            <div className="rounded-md bg-secondary/40 p-3 text-sm">
+              <p className="text-muted-foreground">R-Multiple</p>
+              <p className="font-medium">{trade.rMultiple ? `${trade.rMultiple.toFixed(2)}R` : "Auto-calculated from entry, stop loss, and P/L"}</p>
+            </div>
+
+            <details className="rounded-lg border border-border bg-secondary/20 p-3">
+              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Notes & Psychology</summary>
+              <div className="mt-3 space-y-2">
                 <Label>Status</Label>
                 <select name="status" defaultValue={trade.status ?? ""} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
                   <option value="">Auto (from P/L)</option>
@@ -73,7 +98,7 @@ export default async function EditTradePage({ params }: { params: { id: string }
                   <option>PENDING</option>
                 </select>
               </div>
-              <div className="space-y-2">
+              <div className="mt-3 space-y-2">
                 <Label>Rating</Label>
                 <div className="flex h-10 items-center gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -84,9 +109,6 @@ export default async function EditTradePage({ params }: { params: { id: string }
                   ))}
                 </div>
               </div>
-            </div>
-            <details className="rounded-lg border border-border bg-secondary/20 p-3">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Plan & Reflection</summary>
               <div className="mt-3 space-y-2">
                 <Label>Pre-trade plan</Label>
                 <Textarea name="preTradePlan" defaultValue={trade.preTradePlan ?? ""} placeholder="Confluence, bias, entry trigger, invalidation..." />
@@ -99,9 +121,6 @@ export default async function EditTradePage({ params }: { params: { id: string }
                 <Label>Notes</Label>
                 <Textarea name="notes" defaultValue={trade.notes ?? ""} />
               </div>
-            </details>
-            <details className="rounded-lg border border-border bg-secondary/20 p-3">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Psychology</summary>
               <div className="mt-3 space-y-2">
                 <Label>Emotions before / during</Label>
                 <TagSelector name="emotions" options={["Calm", "Anxious", "Confident", "Greedy", "Fearful", "Frustrated", "Neutral", "Excited", "Revenge", "Overtrading"]} defaultValue={trade.emotions ?? ""} />
@@ -111,10 +130,7 @@ export default async function EditTradePage({ params }: { params: { id: string }
                 <TagSelector name="mistakes" options={["FOMO", "Sizing too big", "No stop loss", "Moving SL", "Revenge trading", "Overtrading", "Early exit", "Late entry", "Ignoring HTF", "Not following plan"]} defaultValue={trade.mistakes ?? ""} />
               </div>
             </details>
-            <div className="grid grid-cols-2 gap-3">
-              <Field name="session" label="Session" defaultValue={trade.session} />
-              <Field name="strategyTag" label="Strategy" defaultValue={trade.strategyTag} />
-            </div>
+
             <details className="rounded-lg border border-border bg-secondary/20 p-3">
               <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Screenshots</summary>
               <div className="mt-3 grid grid-cols-2 gap-3">
@@ -125,6 +141,7 @@ export default async function EditTradePage({ params }: { params: { id: string }
                 <ImageUpload name="annotatedScreenshot" label="Annotated chart" />
               </div>
             </details>
+
             <div className="flex gap-3">
               <Button>Save changes</Button>
               <Button asChild variant="outline"><Link href="/journal">Cancel</Link></Button>
