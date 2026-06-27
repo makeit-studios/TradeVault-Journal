@@ -17,12 +17,10 @@ const COLUMN_ALIASES: Record<string, string> = {
   status: "status",
   session: "session",
   strategy: "strategy", strategyTag: "strategy", "strategy tag": "strategy",
-  timeframe: "timeframe", tf: "timeframe",
   emotions: "emotions", emotion: "emotions",
   mistakes: "mistakes", mistake: "mistakes",
   accountName: "accountName", account: "accountName", "account name": "accountName",
   notes: "notes", note: "notes",
-  marketType: "marketType", "market type": "marketType", type: "marketType",
   rating: "rating",
   riskPercent: "riskPercent", "risk %": "riskPercent", riskPct: "riskPercent"
 };
@@ -133,7 +131,6 @@ export async function POST(request: Request) {
           userId: session.user.id,
           accountId,
           symbol: row.symbol.toUpperCase(),
-          marketType: row.marketType || null,
           side,
           entryPrice: entry,
           exitPrice: exit ?? null,
@@ -146,7 +143,6 @@ export async function POST(request: Request) {
           rrRatio: calcRR(entry, sl, tp),
           rMultiple: calcRMultiple(entry, sl, pnl, lotSize),
           rating: row.rating ? Number(row.rating) : null,
-          timeframe: row.timeframe || null,
           tradeDate: new Date(row.date),
           session: row.session || "",
           strategyTag: row.strategy || "",

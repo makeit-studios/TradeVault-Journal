@@ -29,20 +29,7 @@ export async function POST(request: Request) {
     data: {
       name: parsed.data.name,
       email,
-      password,
-      tradingAccounts: {
-        create: {
-          name: "Primary Trading Account",
-          broker: "Personal account",
-          accountType: "Personal",
-          startingBalance: 10000,
-          currentBalance: 10000,
-          profitTarget: 1000,
-          dailyDrawdown: 500,
-          maxDrawdown: 1000,
-          currency: "USD"
-        }
-      }
+      password
     }
   });
 

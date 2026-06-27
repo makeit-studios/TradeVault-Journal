@@ -1,13 +1,13 @@
-import { addMonths, format } from "date-fns";
+import { addMonths, format, isSameDay } from "date-fns";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarCell } from "@/components/calendar-cell";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { buildCalendarDays } from "@/lib/analytics";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/session";
-import { cn, formatCurrency } from "@/lib/utils";
 
 export default async function CalendarPage({ searchParams }: { searchParams: { month?: string } }) {
   const user = await requireUser();
@@ -18,7 +18,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: { m
 
   return (
     <>
-      <PageHeader title="Trading Calendar" description="Daily P/L and trade count colored by session outcome." />
+      <PageHeader title="Trading Calendar" description="Tap a day to see trades. Daily P/L colored by session outcome." />
       <Card>
         <CardContent className="p-5">
           <div className="mb-4 flex items-center justify-between">
@@ -35,23 +35,26 @@ export default async function CalendarPage({ searchParams }: { searchParams: { m
           </div>
           <div className="mt-3 grid grid-cols-7 gap-2">
             {days.map((day) => (
-              <div
+              <CalendarCell
                 key={day.date.toISOString()}
-                className={cn(
-                  "min-h-28 rounded-lg border border-border bg-secondary/40 p-3",
-                  day.pnl > 0 && "border-emerald-500/30 bg-emerald-500/10",
-                  day.pnl < 0 && "border-rose-500/30 bg-rose-500/10"
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{day.label}</span>
-                  <span className="text-[11px] text-muted-foreground">{format(day.date, "EEE")}</span>
-                </div>
-                <p className={cn("mt-5 text-sm font-semibold", day.pnl > 0 && "text-emerald-300", day.pnl < 0 && "text-rose-300")}>
-                  {day.trades ? formatCurrency(day.pnl) : "No trades"}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">{day.trades} trades</p>
-              </div>
+                date={day.date}
+                label={day.label}
+                weekday={day.weekday}
+                pnl={day.pnl}
+                trades={day.trades}
+                wins={day.wins}
+                dayTrades={trades
+                  .filter((t) => isSameDay(t.tradeDate, day.date))
+                  .map((t) => ({
+                    id: t.id,
+                    symbol: t.symbol,
+                    side: t.side,
+                    entryPrice: t.entryPrice,
+                    exitPrice: t.exitPrice,
+                    profitLoss: t.profitLoss,
+                    strategyTag: t.strategyTag
+                  }))}
+              />
             ))}
           </div>
         </CardContent>

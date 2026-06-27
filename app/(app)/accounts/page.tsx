@@ -1,5 +1,6 @@
 import type { InputHTMLAttributes } from "react";
 import { createAccount, deleteAccount } from "@/app/actions";
+import { EditAccountDialog } from "@/components/edit-account-dialog";
 import { PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -99,10 +100,13 @@ export default async function AccountsPage() {
                     </div>
                     <Progress value={health.ruleHealth} />
                   </div>
-                  <form action={deleteAccount}>
-                    <input type="hidden" name="id" value={account.id} />
-                    <Button variant="outline" size="sm">Delete</Button>
-                  </form>
+                  <div className="flex gap-2">
+                    <EditAccountDialog account={{ ...account, minTradingDays: account.minTradingDays ?? 0 }} />
+                    <form action={deleteAccount}>
+                      <input type="hidden" name="id" value={account.id} />
+                      <Button variant="outline" size="sm">Delete</Button>
+                    </form>
+                  </div>
                 </CardContent>
               </Card>
             );

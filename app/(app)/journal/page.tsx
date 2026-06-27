@@ -2,6 +2,8 @@ import type { InputHTMLAttributes } from "react";
 import { format } from "date-fns";
 import Link from "next/link";
 import { createTrade, deleteTrade } from "@/app/actions";
+import { CsvImport } from "@/components/csv-import";
+import { ImageUpload } from "@/components/image-upload";
 import { PageHeader } from "@/components/page-header";
 import { TagSelector } from "@/components/tag-selector";
 import { Badge } from "@/components/ui/badge";
@@ -47,34 +49,6 @@ export default async function JournalPage() {
                   <select name="side" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
                     <option>BUY</option>
                     <option>SELL</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label>Market type</Label>
-                  <select name="marketType" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="">Auto</option>
-                    <option>FOREX</option>
-                    <option>CRYPTO</option>
-                    <option>STOCKS</option>
-                    <option>FUTURES</option>
-                    <option>OPTIONS</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Timeframe</Label>
-                  <select name="timeframe" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="">Select</option>
-                    <option>M1</option>
-                    <option>M5</option>
-                    <option>M15</option>
-                    <option>M30</option>
-                    <option>H1</option>
-                    <option>H4</option>
-                    <option>D1</option>
-                    <option>W1</option>
-                    <option>MN</option>
                   </select>
                 </div>
               </div>
@@ -153,11 +127,11 @@ export default async function JournalPage() {
               <details className="rounded-lg border border-border bg-secondary/20 p-3">
                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Screenshots</summary>
                 <div className="mt-3 grid grid-cols-2 gap-3">
-                  <Field name="beforeScreenshot" label="Before entry" type="file" accept="image/*" required={false} />
-                  <Field name="afterScreenshot" label="After exit" type="file" accept="image/*" required={false} />
+                  <ImageUpload name="beforeScreenshot" label="Before entry" />
+                  <ImageUpload name="afterScreenshot" label="After exit" />
                 </div>
                 <div className="mt-3">
-                  <Field name="annotatedScreenshot" label="Annotated chart" type="file" accept="image/*" required={false} />
+                  <ImageUpload name="annotatedScreenshot" label="Annotated chart" />
                 </div>
               </details>
               <Button disabled={!accounts.length}>Save trade</Button>
@@ -169,19 +143,7 @@ export default async function JournalPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Trade history</CardTitle>
-              <details className="relative">
-                <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">CSV import</summary>
-                <form
-                  action="/api/trades/import"
-                  method="POST"
-                  encType="multipart/form-data"
-                  className="absolute right-0 top-6 z-10 w-72 rounded-lg border border-border bg-card p-4 shadow-lg"
-                >
-                  <p className="mb-2 text-xs text-muted-foreground">Upload a CSV with columns: symbol,side,entryPrice,exitPrice,stopLoss,takeProfit,lotSize,profitLoss,tradeDate,strategyTag,notes</p>
-                  <Input name="file" type="file" accept=".csv" required />
-                  <Button type="submit" size="sm" className="mt-2 w-full">Upload CSV</Button>
-                </form>
-              </details>
+              <CsvImport />
             </div>
           </CardHeader>
           <CardContent>

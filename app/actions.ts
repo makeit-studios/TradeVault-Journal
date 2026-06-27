@@ -40,7 +40,6 @@ async function saveUpload(file: File | null, prefix: string) {
 const tradeSchema = z.object({
   accountId: z.string().min(1),
   symbol: z.string().min(1),
-  marketType: z.string().default(""),
   side: z.enum(["BUY", "SELL"]),
   entryPrice: z.coerce.number().finite(),
   exitPrice: z.coerce.number().finite().optional(),
@@ -50,7 +49,6 @@ const tradeSchema = z.object({
   riskPercent: z.coerce.number().min(0).default(0),
   profitLoss: z.coerce.number().finite(),
   status: z.string().default(""),
-  timeframe: z.string().default(""),
   rating: z.coerce.number().int().min(1).max(5).optional(),
   tradeDate: z.string().min(1),
   session: z.string().default(""),
@@ -91,13 +89,34 @@ export async function deleteAccount(formData: FormData) {
   revalidatePath("/accounts");
 }
 
+export async function updateAccount(formData: FormData) {
+  const user = await requireUser();
+  const id = String(formData.get("id"));
+  await prisma.tradingAccount.updateMany({
+    where: { id, userId: user.id },
+    data: {
+      name: String(formData.get("name")),
+      broker: String(formData.get("broker")),
+      accountType: String(formData.get("accountType")),
+      startingBalance: numberFrom(formData, "startingBalance"),
+      currentBalance: numberFrom(formData, "currentBalance"),
+      profitTarget: numberFrom(formData, "profitTarget"),
+      dailyDrawdown: numberFrom(formData, "dailyDrawdown"),
+      maxDrawdown: numberFrom(formData, "maxDrawdown"),
+      minTradingDays: numberFrom(formData, "minTradingDays", 0),
+      status: String(formData.get("status")),
+      currency: String(formData.get("currency") || "USD")
+    }
+  });
+  revalidatePath("/accounts");
+}
+
 export async function createTrade(formData: FormData) {
   const user = await requireUser();
 
   const raw = {
     accountId: String(formData.get("accountId")),
     symbol: String(formData.get("symbol") || "").toUpperCase(),
-    marketType: String(formData.get("marketType") || ""),
     side: String(formData.get("side")),
     entryPrice: formData.get("entryPrice"),
     exitPrice: formData.get("exitPrice") || undefined,
@@ -106,7 +125,6 @@ export async function createTrade(formData: FormData) {
     lotSize: formData.get("lotSize"),
     riskPercent: formData.get("riskPercent") || undefined,
     profitLoss: formData.get("profitLoss"),
-    timeframe: String(formData.get("timeframe") || ""),
     rating: formData.get("rating") || undefined,
     tradeDate: String(formData.get("tradeDate")),
     session: String(formData.get("session") || ""),
@@ -139,7 +157,6 @@ export async function createTrade(formData: FormData) {
         userId: user.id,
         accountId: parsed.accountId,
         symbol: parsed.symbol,
-        marketType: parsed.marketType || null,
         side: parsed.side,
         entryPrice: entry,
         exitPrice: parsed.exitPrice ?? null,
@@ -152,7 +169,6 @@ export async function createTrade(formData: FormData) {
         rrRatio: calcRR(entry, sl, tp),
         rMultiple: calcRMultiple(entry, sl, pnl, lotSize),
         rating: parsed.rating ?? null,
-        timeframe: parsed.timeframe || null,
         tradeDate: new Date(parsed.tradeDate),
         session: parsed.session,
         strategyTag: parsed.strategyTag,
@@ -200,7 +216,6 @@ export async function updateTrade(formData: FormData) {
   const raw = {
     accountId: String(formData.get("accountId")),
     symbol: String(formData.get("symbol") || "").toUpperCase(),
-    marketType: String(formData.get("marketType") || ""),
     side: String(formData.get("side")),
     entryPrice: formData.get("entryPrice"),
     exitPrice: formData.get("exitPrice") || undefined,
@@ -209,7 +224,6 @@ export async function updateTrade(formData: FormData) {
     lotSize: formData.get("lotSize"),
     riskPercent: formData.get("riskPercent") || undefined,
     profitLoss: formData.get("profitLoss"),
-    timeframe: String(formData.get("timeframe") || ""),
     rating: formData.get("rating") || undefined,
     tradeDate: String(formData.get("tradeDate")),
     session: String(formData.get("session") || ""),
@@ -243,7 +257,6 @@ export async function updateTrade(formData: FormData) {
   const updateData: Prisma.TradeUncheckedUpdateInput = {
     accountId: parsed.accountId,
     symbol: parsed.symbol,
-    marketType: parsed.marketType || null,
     side: parsed.side,
     entryPrice: entry,
     exitPrice: parsed.exitPrice ?? null,
@@ -255,9 +268,8 @@ export async function updateTrade(formData: FormData) {
     status: parsed.status || calcStatus(pnl),
     rrRatio: calcRR(entry, sl, tp),
     rMultiple: calcRMultiple(entry, sl, pnl, lotSize),
-    rating: parsed.rating ?? null,
-    timeframe: parsed.timeframe || null,
-    tradeDate: new Date(parsed.tradeDate),
+        rating: parsed.rating ?? null,
+        tradeDate: new Date(parsed.tradeDate),
     session: parsed.session,
     strategyTag: parsed.strategyTag,
     emotions: parsed.emotions || null,

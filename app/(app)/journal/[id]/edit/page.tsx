@@ -2,6 +2,7 @@ import type { InputHTMLAttributes } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { updateTrade } from "@/app/actions";
+import { ImageUpload } from "@/components/image-upload";
 import { PageHeader } from "@/components/page-header";
 import { TagSelector } from "@/components/tag-selector";
 import { Button } from "@/components/ui/button";
@@ -39,34 +40,6 @@ export default async function EditTradePage({ params }: { params: { id: string }
                 <Label>Side</Label>
                 <select name="side" defaultValue={trade.side} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
                   <option>BUY</option><option>SELL</option>
-                </select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>Market type</Label>
-                <select name="marketType" defaultValue={trade.marketType ?? ""} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  <option value="">Auto</option>
-                  <option>FOREX</option>
-                  <option>CRYPTO</option>
-                  <option>STOCKS</option>
-                  <option>FUTURES</option>
-                  <option>OPTIONS</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label>Timeframe</Label>
-                <select name="timeframe" defaultValue={trade.timeframe ?? ""} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  <option value="">Select</option>
-                  <option>M1</option>
-                  <option>M5</option>
-                  <option>M15</option>
-                  <option>M30</option>
-                  <option>H1</option>
-                  <option>H4</option>
-                  <option>D1</option>
-                  <option>W1</option>
-                  <option>MN</option>
                 </select>
               </div>
             </div>
@@ -145,11 +118,11 @@ export default async function EditTradePage({ params }: { params: { id: string }
             <details className="rounded-lg border border-border bg-secondary/20 p-3">
               <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Screenshots</summary>
               <div className="mt-3 grid grid-cols-2 gap-3">
-                <Field name="beforeScreenshot" label="Before entry" type="file" accept="image/*" required={false} />
-                <Field name="afterScreenshot" label="After exit" type="file" accept="image/*" required={false} />
+                <ImageUpload name="beforeScreenshot" label="Before entry" />
+                <ImageUpload name="afterScreenshot" label="After exit" />
               </div>
               <div className="mt-3">
-                <Field name="annotatedScreenshot" label="Annotated chart" type="file" accept="image/*" required={false} />
+                <ImageUpload name="annotatedScreenshot" label="Annotated chart" />
               </div>
             </details>
             <div className="flex gap-3">
