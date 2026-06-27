@@ -8,6 +8,7 @@ import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/session";
+import { calcStatus, calcRR, calcRMultiple } from "@/lib/trade-calc";
 
 const MAX_UPLOAD_SIZE = 4 * 1024 * 1024;
 const ALLOWED_UPLOAD_TYPES = new Map([
@@ -20,26 +21,6 @@ const ALLOWED_UPLOAD_TYPES = new Map([
 function numberFrom(formData: FormData, key: string, fallback = 0) {
   const value = Number(formData.get(key));
   return Number.isFinite(value) ? value : fallback;
-}
-
-function calcStatus(pnl: number): string {
-  if (pnl > 0) return "WIN";
-  if (pnl < 0) return "LOSS";
-  return "BREAKEVEN";
-}
-
-function calcRR(entry: number, stopLoss: number | null, takeProfit: number | null): number | null {
-  if (!stopLoss || !takeProfit) return null;
-  const risk = Math.abs(entry - stopLoss);
-  if (risk === 0) return null;
-  return Math.round((Math.abs(takeProfit - entry) / risk) * 100) / 100;
-}
-
-function calcRMultiple(entry: number, stopLoss: number | null, pnl: number, lotSize: number): number | null {
-  if (!stopLoss) return null;
-  const risk = Math.abs(entry - stopLoss) * lotSize;
-  if (risk === 0) return null;
-  return Math.round((pnl / risk) * 100) / 100;
 }
 
 async function saveUpload(file: File | null, prefix: string) {

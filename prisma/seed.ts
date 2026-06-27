@@ -1,28 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { calcStatus, calcRR, calcRMultiple } from "../lib/trade-calc";
 
 const prisma = new PrismaClient();
-
-function calcStatus(pnl: number): string {
-  if (pnl > 0) return "WIN";
-  if (pnl < 0) return "LOSS";
-  return "BREAKEVEN";
-}
-
-function calcRR(entry: number, stopLoss: number | null, takeProfit: number | null): number | null {
-  if (!stopLoss || !takeProfit) return null;
-  const risk = Math.abs(entry - stopLoss);
-  if (risk === 0) return null;
-  const reward = Math.abs(takeProfit - entry);
-  return Math.round((reward / risk) * 100) / 100;
-}
-
-function calcRMultiple(entry: number, stopLoss: number | null, pnl: number, lotSize: number): number | null {
-  if (!stopLoss) return null;
-  const risk = Math.abs(entry - stopLoss) * lotSize;
-  if (risk === 0) return null;
-  return Math.round((pnl / risk) * 100) / 100;
-}
 
 async function main() {
   const password = await bcrypt.hash("password123", 10);

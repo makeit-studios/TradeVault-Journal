@@ -74,11 +74,11 @@ export default async function EditTradePage({ params }: { params: { id: string }
               <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Entry / Exit</summary>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <Field name="entryPrice" label="Entry" type="number" step="any" defaultValue={trade.entryPrice} />
-                <Field name="exitPrice" label="Exit" type="number" step="any" defaultValue={trade.exitPrice ?? 0} />
+                <Field name="exitPrice" label="Exit" type="number" step="any" defaultValue={trade.exitPrice ?? ""} />
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
-                <Field name="stopLoss" label="Stop loss" type="number" step="any" defaultValue={trade.stopLoss ?? 0} />
-                <Field name="takeProfit" label="Take profit" type="number" step="any" defaultValue={trade.takeProfit ?? 0} />
+                <Field name="stopLoss" label="Stop loss" type="number" step="any" defaultValue={trade.stopLoss ?? ""} />
+                <Field name="takeProfit" label="Take profit" type="number" step="any" defaultValue={trade.takeProfit ?? ""} />
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <Field name="lotSize" label="Lot size" type="number" step="any" defaultValue={trade.lotSize} />

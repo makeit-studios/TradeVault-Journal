@@ -11,3 +11,4 @@ public/uploads/*
 dev-server.log
 dev-server.err.log
 *.tsbuildinfo
+.vercel
