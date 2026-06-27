@@ -30,7 +30,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: { m
               <Link href={`/calendar?month=${monthOffset + 1}`}><ChevronRight className="h-4 w-4" /></Link>
             </Button>
           </div>
-          <div className="grid grid-cols-7 gap-2 text-center text-xs text-muted-foreground">
+          <div className="grid grid-cols-7 gap-2 text-center text-xs text-soft-gray">
             {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => <div key={day}>{day}</div>)}
           </div>
           <div className="mt-3 grid grid-cols-7 gap-2">

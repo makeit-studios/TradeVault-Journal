@@ -39,7 +39,7 @@ export default async function SettingsPage() {
             <CardTitle>Workspace</CardTitle>
             <CardDescription>TradeVault is configured for a local SQLite MVP that can later move to Supabase.</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 text-sm text-muted-foreground">
+          <CardContent className="grid gap-3 text-sm text-soft-gray">
             <p>Authentication: NextAuth credentials provider</p>
             <p>Database: Prisma ORM with SQLite</p>
             <p>Charts: Recharts with server-side aggregated data</p>

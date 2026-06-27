@@ -58,11 +58,11 @@ export default async function DashboardPage() {
               {goals.map((goal) => {
                 const progress = goal.targetValue > 0 ? Math.min(100, (goal.currentValue / goal.targetValue) * 100) : 0;
                 return (
-                  <div key={goal.id} className="rounded-lg border border-border bg-secondary/40 p-4">
-                    <p className="text-sm font-medium capitalize">{goal.type.toLowerCase().replace(/_/g, " ")}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">{goal.period}</p>
+                  <div key={goal.id} className="rounded-lg border border-dark-surface bg-dark-charcoal p-4">
+                    <p className="text-sm font-medium capitalize text-white">{goal.type.toLowerCase().replace(/_/g, " ")}</p>
+                    <p className="mt-1 text-xs text-soft-gray">{goal.period}</p>
                     <Progress value={progress} className="mt-3" />
-                    <p className="mt-1 text-xs text-muted-foreground">{formatCurrency(goal.currentValue)} / {formatCurrency(goal.targetValue)}</p>
+                    <p className="mt-1 text-xs text-soft-gray">{formatCurrency(goal.currentValue)} / {formatCurrency(goal.targetValue)}</p>
                   </div>
                 );
               })}
@@ -89,22 +89,22 @@ export default async function DashboardPage() {
               const accountTrades = trades.filter((trade) => trade.accountId === account.id);
               const health = getRuleHealth(account, accountTrades);
               return (
-                <div key={account.id} className="rounded-lg border border-border bg-secondary/40 p-4">
+                <div key={account.id} className="rounded-lg border border-dark-surface bg-dark-charcoal p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-medium">{account.name}</p>
-                      <p className="text-sm text-muted-foreground">{account.broker}</p>
+                      <p className="font-medium text-white">{account.name}</p>
+                      <p className="text-sm text-soft-gray">{account.broker}</p>
                     </div>
                     <Badge variant={health.ruleHealth < 35 ? "negative" : health.ruleHealth < 60 ? "warning" : "positive"}>{health.warning}</Badge>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <p className="text-muted-foreground">Balance</p>
-                      <p className="font-semibold">{formatCurrency(account.currentBalance, account.currency)}</p>
+                      <p className="text-soft-gray">Balance</p>
+                      <p className="font-semibold text-white">{formatCurrency(account.currentBalance, account.currency)}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Target</p>
-                      <p className="font-semibold">{health.targetProgress.toFixed(0)}%</p>
+                      <p className="text-soft-gray">Target</p>
+                      <p className="font-semibold text-white">{health.targetProgress.toFixed(0)}%</p>
                     </div>
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
                   <TableCell>{trade.account.name}</TableCell>
                   <TableCell>{trade.strategyTag}</TableCell>
                   <TableCell>{trade.session}</TableCell>
-                  <TableCell className={trade.profitLoss >= 0 ? "text-right text-emerald-300" : "text-right text-rose-300"}>
+                  <TableCell className={trade.profitLoss >= 0 ? "text-right text-success-green" : "text-right text-error-red"}>
                     {formatCurrency(trade.profitLoss)}
                   </TableCell>
                 </TableRow>

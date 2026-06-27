@@ -49,7 +49,7 @@ export default async function AccountsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label>Status</Label>
-                  <select name="status" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <select name="status" className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                     <option>ACTIVE</option>
                     <option>PAUSED</option>
                     <option>PASSED</option>
@@ -74,7 +74,7 @@ export default async function AccountsPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <CardTitle>{account.name}</CardTitle>
-                      <p className="mt-1 text-sm text-muted-foreground">{account.broker} · {account.accountType}</p>
+                      <p className="mt-1 text-sm text-soft-gray">{account.broker} · {account.accountType}</p>
                     </div>
                     <Badge variant={account.status === "BREACHED" ? "negative" : "positive"}>{account.status}</Badge>
                   </div>
@@ -88,14 +88,14 @@ export default async function AccountsPage() {
                   </div>
                   <div>
                     <div className="mb-2 flex justify-between text-sm">
-                      <span className="text-muted-foreground">Profit target</span>
+                      <span className="text-soft-gray">Profit target</span>
                       <span>{health.targetProgress.toFixed(0)}%</span>
                     </div>
                     <Progress value={health.targetProgress} />
                   </div>
                   <div>
                     <div className="mb-2 flex justify-between text-sm">
-                      <span className="text-muted-foreground">Rule health</span>
+                      <span className="text-soft-gray">Rule health</span>
                       <span>{health.warning}</span>
                     </div>
                     <Progress value={health.ruleHealth} />
@@ -128,9 +128,9 @@ const Field = ({ label, ...props }: { label: string } & InputHTMLAttributes<HTML
 
 const Metric = ({ label, value, tone }: { label: string; value: string; tone?: "positive" | "negative" }) => {
   return (
-    <div className="rounded-md bg-secondary/60 p-3">
-      <p className="text-muted-foreground">{label}</p>
-      <p className={tone === "positive" ? "font-semibold text-emerald-300" : tone === "negative" ? "font-semibold text-rose-300" : "font-semibold"}>{value}</p>
+    <div className="rounded-lg bg-dark-surface p-3">
+      <p className="text-soft-gray">{label}</p>
+      <p className={tone === "positive" ? "font-semibold text-success-green" : tone === "negative" ? "font-semibold text-error-red" : "font-semibold text-white"}>{value}</p>
     </div>
   );
 };

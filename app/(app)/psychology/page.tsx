@@ -28,8 +28,8 @@ export default async function PsychologyPage() {
             <form action={createPsychologyEntry} className="grid gap-4">
               <div className="space-y-2">
                 <Label>Account</Label>
-                <select name="accountId" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  <option value="">General day</option>
+                <select name="accountId" className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
+                  <option value="" className="text-soft-gray">General day</option>
                   {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
                 </select>
               </div>
@@ -50,7 +50,7 @@ export default async function PsychologyPage() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold">{format(entry.date, "MMMM d, yyyy")}</p>
-                    <p className="text-sm text-muted-foreground">{entry.account?.name ?? "General day"}</p>
+                    <p className="text-sm text-soft-gray">{entry.account?.name ?? "General day"}</p>
                   </div>
                   <Badge variant={entry.confidenceRating >= 8 ? "positive" : entry.confidenceRating >= 5 ? "warning" : "negative"}>Confidence {entry.confidenceRating}/10</Badge>
                 </div>
@@ -74,6 +74,6 @@ const Field = ({ label, ...props }: { label: string } & InputHTMLAttributes<HTML
 };
 
 const Note = ({ label, value, className }: { label: string; value: string; className?: string }) => {
-  return <div className={className}><p className="text-xs uppercase text-muted-foreground">{label}</p><p className="mt-1 text-sm leading-6">{value}</p></div>;
+  return <div className={className}><p className="text-xs uppercase text-soft-gray">{label}</p><p className="mt-1 text-sm leading-6 text-white">{value}</p></div>;
 };
 

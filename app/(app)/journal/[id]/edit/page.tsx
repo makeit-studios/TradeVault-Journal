@@ -35,11 +35,11 @@ export default async function EditTradePage({ params }: { params: { id: string }
           <form action={updateTrade} className="grid gap-4">
             <input type="hidden" name="id" value={trade.id} />
 
-            <details className="rounded-lg border border-border bg-secondary/20 p-3">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Account & Advanced</summary>
+            <details className="rounded-lg border border-dark-surface bg-dark-charcoal p-3">
+              <summary className="cursor-pointer text-sm font-medium text-soft-gray hover:text-brand-gold">Account & Advanced</summary>
               <div className="mt-3 space-y-2">
                 <Label>Account</Label>
-                <select name="accountId" defaultValue={trade.accountId} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <select name="accountId" defaultValue={trade.accountId} className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                   {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
                 </select>
               </div>
@@ -49,7 +49,7 @@ export default async function EditTradePage({ params }: { params: { id: string }
               </div>
             </details>
 
-            <p className="text-xs font-semibold text-muted-foreground">Trade Info</p>
+            <p className="text-xs font-semibold text-soft-gray">Trade Info</p>
             <div className="grid grid-cols-2 gap-3">
               <Field name="tradeDate" label="Date" type="date" defaultValue={format(trade.tradeDate, "yyyy-MM-dd")} />
               <Combobox name="session" label="Session" options={["Asian", "London", "New York"]} placeholder="Select session" defaultValue={trade.session || ""} />
@@ -58,37 +58,37 @@ export default async function EditTradePage({ params }: { params: { id: string }
               <Combobox name="symbol" label="Instrument" options={symbols} defaultValue={trade.symbol} />
               <div className="space-y-2">
                 <Label>Direction</Label>
-                <select name="side" defaultValue={trade.side} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <select name="side" defaultValue={trade.side} className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                   <option>BUY</option><option>SELL</option>
                 </select>
               </div>
             </div>
             <Combobox name="strategyTag" label="Strategy / Setup" options={strategies} defaultValue={trade.strategyTag || ""} />
 
-            <p className="text-xs font-semibold text-muted-foreground">Entry / Exit</p>
+            <p className="text-xs font-semibold text-soft-gray">Entry / Exit</p>
             <div className="grid grid-cols-2 gap-3">
               <Field name="entryPrice" label="Entry price" type="number" step="any" defaultValue={trade.entryPrice} />
               <Field name="exitPrice" label="Exit price" type="number" step="any" defaultValue={trade.exitPrice ?? ""} />
             </div>
 
-            <p className="text-xs font-semibold text-muted-foreground">Risk</p>
+            <p className="text-xs font-semibold text-soft-gray">Risk</p>
             <div className="grid grid-cols-2 gap-3">
               <Field name="stopLoss" label="Stop loss" type="number" step="any" defaultValue={trade.stopLoss ?? ""} required={false} />
               <Field name="takeProfit" label="Take profit" type="number" step="any" defaultValue={trade.takeProfit ?? ""} required={false} />
             </div>
 
-            <p className="text-xs font-semibold text-muted-foreground">Result</p>
+            <p className="text-xs font-semibold text-soft-gray">Result</p>
             <Field name="profitLoss" label="Profit / loss" type="number" step="any" defaultValue={trade.profitLoss} />
-            <div className="rounded-md bg-secondary/40 p-3 text-sm">
-              <p className="text-muted-foreground">R-Multiple</p>
-              <p className="font-medium">{trade.rMultiple ? `${trade.rMultiple.toFixed(2)}R` : "Auto-calculated from entry, stop loss, and P/L"}</p>
+            <div className="rounded-lg bg-dark-surface p-3 text-sm">
+              <p className="text-soft-gray">R-Multiple</p>
+              <p className="font-medium text-white">{trade.rMultiple ? `${trade.rMultiple.toFixed(2)}R` : "Auto-calculated from entry, stop loss, and P/L"}</p>
             </div>
 
-            <details className="rounded-lg border border-border bg-secondary/20 p-3">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Notes & Psychology</summary>
+            <details className="rounded-lg border border-dark-surface bg-dark-charcoal p-3">
+              <summary className="cursor-pointer text-sm font-medium text-soft-gray hover:text-brand-gold">Notes & Psychology</summary>
               <div className="mt-3 space-y-2">
                 <Label>Status</Label>
-                <select name="status" defaultValue={trade.status ?? ""} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <select name="status" defaultValue={trade.status ?? ""} className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                   <option value="">Auto (from P/L)</option>
                   <option>WIN</option>
                   <option>LOSS</option>
@@ -122,8 +122,8 @@ export default async function EditTradePage({ params }: { params: { id: string }
               </div>
             </details>
 
-            <details className="rounded-lg border border-border bg-secondary/20 p-3">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Screenshots</summary>
+            <details className="rounded-lg border border-dark-surface bg-dark-charcoal p-3">
+              <summary className="cursor-pointer text-sm font-medium text-soft-gray hover:text-brand-gold">Screenshots</summary>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <ImageUpload name="beforeScreenshot" label="Before entry" />
                 <ImageUpload name="afterScreenshot" label="After exit" />

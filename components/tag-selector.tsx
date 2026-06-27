@@ -31,7 +31,7 @@ export const TagSelector = ({ name, options, defaultValue = "" }: TagSelectorPro
             onClick={() => toggle(option)}
             className={cn(
               "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+              isSelected ? "bg-brand-gold text-black" : "bg-dark-surface text-soft-gray hover:bg-dark-surface/80"
             )}
           >
             {option}

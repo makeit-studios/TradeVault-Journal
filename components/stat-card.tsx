@@ -19,15 +19,15 @@ export function StatCard({
     <Card className="animate-fade-up">
       <CardContent className="p-5">
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <div className="rounded-md bg-secondary p-2">
-            <Icon className="h-4 w-4 text-primary" />
+          <p className="text-sm text-soft-gray">{label}</p>
+          <div className="rounded-sm bg-dark-surface p-2">
+            <Icon className="h-4 w-4 text-brand-gold" />
           </div>
         </div>
-        <p className={cn("mt-4 text-3xl font-semibold", tone === "positive" && "text-emerald-300", tone === "negative" && "text-rose-300")}>
+        <p className={cn("mt-4 text-3xl font-semibold", tone === "positive" && "text-success-green", tone === "negative" && "text-error-red")}>
           {value}
         </p>
-        <p className="mt-2 text-xs text-muted-foreground">{hint}</p>
+        <p className="mt-2 text-xs text-soft-gray">{hint}</p>
       </CardContent>
     </Card>
   );

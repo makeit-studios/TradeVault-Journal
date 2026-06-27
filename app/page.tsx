@@ -14,13 +14,13 @@ export default function LandingPage() {
     <main className="min-h-screen">
       <section className="container grid min-h-screen gap-10 py-8 lg:grid-cols-[1fr_520px] lg:items-center">
         <div className="max-w-3xl animate-fade-up">
-          <div className="mb-5 inline-flex rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-sm text-primary">
+          <div className="mb-5 inline-flex rounded-sm border border-brand-gold/30 bg-brand-gold/10 px-3 py-1 text-sm text-brand-gold">
             TradeVault Journal
           </div>
           <h1 className="text-5xl font-semibold tracking-normal text-white md:text-7xl">
             A premium control room for serious traders.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-soft-gray">
             Manage accounts, log trades, analyze execution, protect prop firm rules, and keep your trading psychology visible without bolting together spreadsheets.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -33,33 +33,33 @@ export default function LandingPage() {
               <Link href="/login">View demo</Link>
             </Button>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">Demo seed login: demo@tradevault.app / password123</p>
+          <p className="mt-4 text-sm text-soft-gray">Demo seed login: demo@tradevault.app / password123</p>
         </div>
 
-        <div className="glass-panel rounded-lg p-4 shadow-2xl">
-          <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-xl border border-dark-surface bg-dark-charcoal p-4 shadow-l2">
+          <div className="rounded-lg border border-dark-surface bg-dark-charcoal p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total P/L</p>
-                <p className="text-4xl font-semibold text-emerald-300">$2,637</p>
+                <p className="text-sm text-soft-gray">Total P/L</p>
+                <p className="text-4xl font-semibold text-brand-gold">$2,637</p>
               </div>
-              <div className="rounded-md bg-primary/15 px-3 py-2 text-sm text-primary">+8.4%</div>
+              <div className="rounded-sm bg-brand-gold/15 px-3 py-2 text-sm text-brand-gold">+8.4%</div>
             </div>
-            <div className="mt-8 h-48 rounded-md border border-border bg-[linear-gradient(135deg,rgba(16,185,129,.22),rgba(14,165,233,.08))] p-4">
-              <div className="h-full rounded border border-white/10 bg-background/45" />
+            <div className="mt-8 h-48 rounded-lg border border-dark-surface bg-dark-charcoal p-4">
+              <div className="h-full rounded border border-medium-gray/30 bg-black/20" />
             </div>
             <div className="mt-5 grid grid-cols-3 gap-3 text-sm">
-              <div className="rounded-md bg-secondary p-3">
-                <p className="text-muted-foreground">Win rate</p>
-                <p className="mt-1 text-xl font-semibold">75%</p>
+              <div className="rounded-lg bg-dark-surface p-3">
+                <p className="text-soft-gray">Win rate</p>
+                <p className="mt-1 text-xl font-semibold text-white">75%</p>
               </div>
-              <div className="rounded-md bg-secondary p-3">
-                <p className="text-muted-foreground">Avg RR</p>
-                <p className="mt-1 text-xl font-semibold">1.82</p>
+              <div className="rounded-lg bg-dark-surface p-3">
+                <p className="text-soft-gray">Avg RR</p>
+                <p className="mt-1 text-xl font-semibold text-white">1.82</p>
               </div>
-              <div className="rounded-md bg-secondary p-3">
-                <p className="text-muted-foreground">Trades</p>
-                <p className="mt-1 text-xl font-semibold">128</p>
+              <div className="rounded-lg bg-dark-surface p-3">
+                <p className="text-soft-gray">Trades</p>
+                <p className="mt-1 text-xl font-semibold text-white">128</p>
               </div>
             </div>
           </div>
@@ -70,9 +70,9 @@ export default function LandingPage() {
         {highlights.map((item) => (
           <Card key={item.label}>
             <CardContent className="p-5">
-              <item.icon className="h-5 w-5 text-primary" />
-              <h2 className="mt-4 font-semibold">{item.label}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.text}</p>
+              <item.icon className="h-5 w-5 text-brand-gold" />
+              <h2 className="mt-4 font-semibold text-white">{item.label}</h2>
+              <p className="mt-2 text-sm leading-6 text-soft-gray">{item.text}</p>
             </CardContent>
           </Card>
         ))}

@@ -17,9 +17,10 @@ import {
   YAxis
 } from "recharts";
 
-const axis = { stroke: "hsl(var(--muted-foreground))", fontSize: 12 };
-const grid = "hsl(var(--border))";
-const colors = ["#10b981", "#38bdf8", "#f59e0b", "#f43f5e", "#a78bfa"];
+const axis = { stroke: "#586077", fontSize: 12 };
+const grid = "#23272B";
+const tooltipStyle = { background: "#1F2228", border: "1px solid #23272B", borderRadius: 8 };
+const colors = ["#F9CC6F", "#38bdf8", "#f59e0b", "#f43f5e", "#a78bfa"];
 
 export function EquityChart({ data }: { data: { date: string; equity: number; pnl?: number }[] }) {
   return (
@@ -27,15 +28,15 @@ export function EquityChart({ data }: { data: { date: string; equity: number; pn
       <AreaChart data={data}>
         <defs>
           <linearGradient id="equity" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+            <stop offset="5%" stopColor="#F9CC6F" stopOpacity={0.4} />
+            <stop offset="95%" stopColor="#F9CC6F" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke={grid} strokeDasharray="3 3" />
         <XAxis dataKey="date" {...axis} />
         <YAxis {...axis} />
-        <Tooltip contentStyle={{ background: "#111827", border: "1px solid #253044", borderRadius: 8 }} />
-        <Area type="monotone" dataKey="equity" stroke="#10b981" fill="url(#equity)" strokeWidth={2} />
+        <Tooltip contentStyle={tooltipStyle} />
+        <Area type="monotone" dataKey="equity" stroke="#F9CC6F" fill="url(#equity)" strokeWidth={2} />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -48,10 +49,10 @@ export function PnlBarChart<T extends { pnl: number }>({ data, nameKey = "name" 
         <CartesianGrid stroke={grid} strokeDasharray="3 3" />
         <XAxis dataKey={nameKey} {...axis} />
         <YAxis {...axis} />
-        <Tooltip contentStyle={{ background: "#111827", border: "1px solid #253044", borderRadius: 8 }} />
+        <Tooltip contentStyle={tooltipStyle} />
         <Bar dataKey="pnl" radius={[6, 6, 0, 0]}>
           {data.map((item, index) => (
-            <Cell key={index} fill={Number(item.pnl) >= 0 ? "#10b981" : "#f43f5e"} />
+            <Cell key={index} fill={Number(item.pnl) >= 0 ? "#F9CC6F" : "#EF4444"} />
           ))}
         </Bar>
       </BarChart>
@@ -72,7 +73,7 @@ export function WinLossPie({ wins, losses }: { wins: number; losses: number }) {
             <Cell key={entry.name} fill={colors[index]} />
           ))}
         </Pie>
-        <Tooltip contentStyle={{ background: "#111827", border: "1px solid #253044", borderRadius: 8 }} />
+        <Tooltip contentStyle={tooltipStyle} />
       </PieChart>
     </ResponsiveContainer>
   );
@@ -85,8 +86,8 @@ export function WinRateChart({ data }: { data: { date: string; winRate: number }
         <CartesianGrid stroke={grid} strokeDasharray="3 3" />
         <XAxis dataKey="date" {...axis} />
         <YAxis {...axis} />
-        <Tooltip contentStyle={{ background: "#111827", border: "1px solid #253044", borderRadius: 8 }} />
-        <Line type="monotone" dataKey="winRate" stroke="#38bdf8" strokeWidth={2} dot={false} />
+        <Tooltip contentStyle={tooltipStyle} />
+        <Line type="monotone" dataKey="winRate" stroke="#F9CC6F" strokeWidth={2} dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );

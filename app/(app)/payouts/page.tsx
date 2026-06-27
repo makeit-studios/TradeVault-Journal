@@ -47,7 +47,7 @@ export default async function PayoutsPage() {
             <form action={createPayout} className="grid gap-4">
               <div className="space-y-2">
                 <Label>Account</Label>
-                <select name="accountId" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <select name="accountId" className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                   {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
                 </select>
               </div>
@@ -55,7 +55,7 @@ export default async function PayoutsPage() {
               <Field name="date" label="Date" type="date" defaultValue={format(new Date(), "yyyy-MM-dd")} />
               <div className="space-y-2">
                 <Label>Status</Label>
-                <select name="status" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <select name="status" className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                   <option>REQUESTED</option><option>PENDING</option><option>APPROVED</option><option>REJECTED</option>
                 </select>
               </div>

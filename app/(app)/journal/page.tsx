@@ -56,11 +56,11 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
           <CardContent>
             <form action={createTrade} encType="multipart/form-data" className="grid gap-4">
 
-              <details className="rounded-lg border border-border bg-secondary/20 p-3">
-                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Account & Advanced</summary>
+              <details className="rounded-lg border border-dark-surface bg-dark-charcoal p-3">
+                <summary className="cursor-pointer text-sm font-medium text-soft-gray hover:text-brand-gold">Account & Advanced</summary>
                 <div className="mt-3 space-y-2">
                   <Label>Account</Label>
-                  <select name="accountId" required className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <select name="accountId" required className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                     {accounts.map((account) => (
                       <option key={account.id} value={account.id}>{account.name}</option>
                     ))}
@@ -72,7 +72,7 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
                 </div>
               </details>
 
-              <p className="text-xs font-semibold text-muted-foreground">Trade Info</p>
+              <p className="text-xs font-semibold text-soft-gray">Trade Info</p>
               <div className="grid grid-cols-2 gap-3">
                 <Field name="tradeDate" label="Date" type="date" defaultValue={format(new Date(), "yyyy-MM-dd")} />
                 <Combobox name="session" label="Session" options={["Asian", "London", "New York"]} placeholder="Select session" />
@@ -81,7 +81,7 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
                 <Combobox name="symbol" label="Instrument" options={symbols} placeholder="EURUSD, XAUUSD, NAS100..." />
                 <div className="space-y-2">
                   <Label>Direction</Label>
-                  <select name="side" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <select name="side" className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                     <option>BUY</option>
                     <option>SELL</option>
                   </select>
@@ -89,31 +89,31 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
               </div>
               <Combobox name="strategyTag" label="Strategy / Setup" options={strategies} placeholder="Liquidity sweep, FVG, Order block..." />
 
-              <p className="text-xs font-semibold text-muted-foreground">Entry / Exit</p>
+              <p className="text-xs font-semibold text-soft-gray">Entry / Exit</p>
               <div className="grid grid-cols-2 gap-3">
                 <Field name="entryPrice" label="Entry price" type="number" step="any" />
                 <Field name="exitPrice" label="Exit price" type="number" step="any" />
               </div>
 
-              <p className="text-xs font-semibold text-muted-foreground">Risk</p>
+              <p className="text-xs font-semibold text-soft-gray">Risk</p>
               <div className="grid grid-cols-2 gap-3">
                 <Field name="stopLoss" label="Stop loss" type="number" step="any" required={false} />
                 <Field name="takeProfit" label="Take profit" type="number" step="any" required={false} />
               </div>
 
               <PnlCalculator />
-              <p className="text-xs font-semibold text-muted-foreground">Result</p>
+              <p className="text-xs font-semibold text-soft-gray">Result</p>
               <Field name="profitLoss" label="Profit / loss" type="number" step="any" />
-              <div className="rounded-md bg-secondary/40 p-3 text-sm">
-                <p className="text-muted-foreground">R-Multiple</p>
-                <p className="font-medium">Auto-calculated from entry, stop loss, and P/L</p>
+              <div className="rounded-lg bg-dark-surface p-3 text-sm">
+                <p className="text-soft-gray">R-Multiple</p>
+                <p className="font-medium text-white">Auto-calculated from entry, stop loss, and P/L</p>
               </div>
 
-              <details className="rounded-lg border border-border bg-secondary/20 p-3">
-                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Notes & Psychology</summary>
+              <details className="rounded-lg border border-dark-surface bg-dark-charcoal p-3">
+                <summary className="cursor-pointer text-sm font-medium text-soft-gray hover:text-brand-gold">Notes & Psychology</summary>
                 <div className="mt-3 space-y-2">
                   <Label>Status</Label>
-                  <select name="status" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <select name="status" className="h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm text-white focus-visible:outline-none focus-visible:border-brand-gold">
                     <option value="">Auto (from P/L)</option>
                     <option>WIN</option>
                     <option>LOSS</option>
@@ -147,8 +147,8 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
                 </div>
               </details>
 
-              <details className="rounded-lg border border-border bg-secondary/20 p-3">
-                <summary className="cursor-pointer text-sm font-medium text-muted-foreground">Screenshots</summary>
+              <details className="rounded-lg border border-dark-surface bg-dark-charcoal p-3">
+                <summary className="cursor-pointer text-sm font-medium text-soft-gray hover:text-brand-gold">Screenshots</summary>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                   <ImageUpload name="beforeScreenshot" label="Before entry" />
                   <ImageUpload name="afterScreenshot" label="After exit" />
@@ -191,7 +191,7 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
                     <TableCell><Badge variant={trade.side === "BUY" ? "positive" : "warning"}>{trade.side}</Badge></TableCell>
                     <TableCell>{trade.account.name}</TableCell>
                     <TableCell>{trade.strategyTag}</TableCell>
-                    <TableCell className={trade.profitLoss >= 0 ? "text-right text-emerald-300" : "text-right text-rose-300"}>{formatCurrency(trade.profitLoss)}</TableCell>
+                    <TableCell className={trade.profitLoss >= 0 ? "text-right text-success-green" : "text-right text-error-red"}>{formatCurrency(trade.profitLoss)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button asChild variant="ghost" size="sm"><Link href={`/journal/${trade.id}/edit`}>Edit</Link></Button>
@@ -205,7 +205,7 @@ export default async function JournalPage({ searchParams }: { searchParams: { se
                 ))}
                 {!trades.length ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                    <TableCell colSpan={7} className="py-10 text-center text-soft-gray">
                       No trades yet. Add your first trade with the form on this page.
                     </TableCell>
                   </TableRow>
