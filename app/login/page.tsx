@@ -12,9 +12,9 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <AuthForm mode="login" />
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-sm text-soft-gray">
             New here?{" "}
-            <Link href="/register" className="text-primary hover:underline">
+            <Link href="/register" className="text-brand-gold font-medium hover:opacity-80">
               Create an account
             </Link>
           </p>

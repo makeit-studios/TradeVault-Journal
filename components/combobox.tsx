@@ -35,26 +35,26 @@ export function Combobox({ name, label, options, placeholder, defaultValue, allo
 
   return (
     <div className="space-y-2" ref={wrapperRef}>
-      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{label}</label>
+      <label className="text-sm font-normal text-soft-gray">{label}</label>
       <div className="relative">
         <input type="hidden" name={name} value={selected} />
         <button
           type="button"
           onClick={() => { setOpen(!open); setSearch(""); }}
-          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm text-foreground"
+          className="flex h-14 w-full items-center justify-between rounded-lg border border-dark-surface bg-dark-charcoal px-3 text-sm text-white"
         >
-          <span className={selected ? "" : "text-muted-foreground"}>{selected || placeholder || "Select..."}</span>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <span className={selected ? "text-white" : "text-soft-gray/50"}>{selected || placeholder || "Select..."}</span>
+          <ChevronDown className="h-4 w-4 text-soft-gray" />
         </button>
         {open ? (
-          <div className="absolute left-0 top-11 z-20 w-full rounded-md border border-border bg-card shadow-lg">
+          <div className="absolute left-0 top-15 z-20 w-full rounded-lg border border-dark-surface bg-dark-charcoal shadow-l2">
             <input
               ref={inputRef}
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search or type new..."
-              className="w-full border-b border-border bg-transparent px-3 py-2.5 text-sm outline-none"
+              className="w-full border-b border-dark-surface bg-transparent px-3 py-2.5 text-sm text-white outline-none placeholder:text-soft-gray/50"
               autoFocus
             />
             <div className="max-h-48 overflow-y-auto">
@@ -64,11 +64,11 @@ export function Combobox({ name, label, options, placeholder, defaultValue, allo
                   type="button"
                   onClick={() => { setSelected(option); setOpen(false); }}
                   className={cn(
-                    "flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition hover:bg-secondary",
-                    selected === option && "bg-secondary"
+                    "flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-white transition hover:bg-white/5",
+                    selected === option && "bg-brand-gold/10"
                   )}
                 >
-                  <Check className={cn("h-4 w-4", selected === option ? "text-foreground" : "text-transparent")} />
+                  <Check className={cn("h-4 w-4", selected === option ? "text-brand-gold" : "text-transparent")} />
                   {option}
                 </button>
               ))}
@@ -76,14 +76,14 @@ export function Combobox({ name, label, options, placeholder, defaultValue, allo
                 <button
                   type="button"
                   onClick={() => { setSelected(search); setOpen(false); }}
-                  className="flex w-full items-center gap-2 border-t border-border px-3 py-2 text-left text-sm text-primary transition hover:bg-secondary"
+                  className="flex w-full items-center gap-2 border-t border-dark-surface px-3 py-2 text-left text-sm text-brand-gold transition hover:bg-white/5"
                 >
                   <Plus className="h-4 w-4" />
                   Add &quot;{search}&quot;
                 </button>
               ) : null}
               {filtered.length === 0 && !showAddNew && !allowCustom ? (
-                <p className="px-3 py-2 text-sm text-muted-foreground">No options found</p>
+                <p className="px-3 py-2 text-sm text-soft-gray/50">No options found</p>
               ) : null}
             </div>
           </div>

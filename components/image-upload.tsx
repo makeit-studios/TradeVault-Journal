@@ -33,10 +33,10 @@ export function ImageUpload({ name, label }: ImageUploadProps) {
         type="file"
         accept="image/*"
         onChange={handleChange}
-        className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-secondary/80"
+        className="block w-full text-sm text-soft-gray file:mr-3 file:rounded-sm file:border-0 file:bg-dark-surface file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-medium-gray"
       />
       {preview ? (
-        <div className="relative mt-2 h-48 w-full rounded-md border border-border bg-black/20">
+        <div className="relative mt-2 h-48 w-full rounded-lg border border-dark-surface bg-black/20">
           <Image src={preview} alt={label} fill className="object-contain" />
         </div>
       ) : null}

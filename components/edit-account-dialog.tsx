@@ -33,11 +33,11 @@ export function EditAccountDialog({ account }: { account: Account }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <button
             type="button"
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-border bg-card p-6 shadow-2xl">
-            <h3 className="mb-4 text-lg font-semibold">Edit {account.name}</h3>
+          <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-dark-surface bg-dark-charcoal p-6 shadow-l2">
+            <h3 className="mb-4 text-lg font-semibold text-white">Edit {account.name}</h3>
             <form action={updateAccount} className="grid gap-4">
               <input type="hidden" name="id" value={account.id} />
               <Field name="name" label="Account name" defaultValue={account.name} />
@@ -58,7 +58,7 @@ export function EditAccountDialog({ account }: { account: Account }) {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label>Status</Label>
-                  <select name="status" defaultValue={account.status} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <select name="status" defaultValue={account.status} className="h-14 w-full rounded-lg border border-dark-surface bg-dark-charcoal px-3 text-sm text-white">
                     <option>ACTIVE</option>
                     <option>PAUSED</option>
                     <option>PASSED</option>

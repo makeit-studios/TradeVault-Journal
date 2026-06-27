@@ -56,7 +56,7 @@ export function TradeResultFields() {
             required
             value={entry}
             onChange={(e) => handleEntryChange(e.target.value)}
-            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            className="flex h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm font-sans text-white placeholder:text-soft-gray/50 focus-visible:outline-none focus-visible:border-brand-gold focus-visible:shadow-[inset_0_-2px_0_#F9CC6F]"
           />
         </div>
         <div className="space-y-2">
@@ -68,7 +68,7 @@ export function TradeResultFields() {
             required
             value={exit}
             onChange={(e) => handleExitChange(e.target.value)}
-            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            className="flex h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm font-sans text-white placeholder:text-soft-gray/50 focus-visible:outline-none focus-visible:border-brand-gold focus-visible:shadow-[inset_0_-2px_0_#F9CC6F]"
           />
         </div>
       </div>
@@ -82,7 +82,7 @@ export function TradeResultFields() {
           required
           value={lotSize}
           onChange={(e) => handleLotChange(e.target.value)}
-          className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+          className="flex h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm font-sans text-white placeholder:text-soft-gray/50 focus-visible:outline-none focus-visible:border-brand-gold focus-visible:shadow-[inset_0_-2px_0_#F9CC6F]"
         />
       </div>
 
@@ -95,17 +95,17 @@ export function TradeResultFields() {
           required
           value={pnl === "" ? "" : pnl}
           onChange={(e) => setPnl(e.target.value === "" ? "" : parseFloat(e.target.value))}
-          className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+          className="flex h-14 w-full rounded-xl border-0 border-b border-medium-gray bg-transparent px-0 pb-1.5 pt-5 text-sm font-sans text-white placeholder:text-soft-gray/50 focus-visible:outline-none focus-visible:border-brand-gold focus-visible:shadow-[inset_0_-2px_0_#F9CC6F]"
           readOnly={pnl !== ""}
         />
         {pnl !== "" ? (
-          <p className="text-xs text-muted-foreground">Auto-calculated. Edit manually if needed.</p>
+          <p className="text-xs text-soft-gray">Auto-calculated. Edit manually if needed.</p>
         ) : null}
       </div>
 
-      <div className="rounded-md bg-secondary/40 p-3 text-sm">
-        <p className="text-muted-foreground">R-Multiple</p>
-        <p className="font-medium">Auto-calculated from entry, stop loss, and P/L</p>
+      <div className="rounded-lg bg-dark-surface p-3 text-sm">
+        <p className="text-soft-gray">R-Multiple</p>
+        <p className="font-medium text-white">Auto-calculated from entry, stop loss, and P/L</p>
       </div>
 
       <div className="space-y-2">
@@ -114,7 +114,7 @@ export function TradeResultFields() {
           {[1, 2, 3, 4, 5].map((star) => (
             <label key={star} className="cursor-pointer">
               <input type="radio" name="rating" value={star} className="peer sr-only" onChange={() => setRating(star)} />
-              <span className={`text-xl ${rating >= star ? "text-amber-400" : "text-muted-foreground"}`}>★</span>
+              <span className={`text-xl ${rating >= star ? "text-brand-gold" : "text-soft-gray/30"}`}>★</span>
             </label>
           ))}
         </div>

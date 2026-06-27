@@ -22,14 +22,14 @@ export function SearchBar() {
 
   return (
     <form onSubmit={handleSubmit} className="relative hidden max-w-md flex-1 md:block">
-      <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Search className="absolute left-3 top-3 h-4 w-4 text-soft-gray" />
       <input
         ref={inputRef}
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search symbols, strategies, accounts..."
-        className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm outline-none transition focus:border-primary"
+        className="h-11 w-full rounded-lg border border-dark-surface bg-dark-charcoal pl-9 pr-3 text-sm text-white outline-none transition placeholder:text-soft-gray/50 focus:border-brand-gold"
       />
     </form>
   );

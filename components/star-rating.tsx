@@ -10,7 +10,7 @@ export function StarRating() {
       {[1, 2, 3, 4, 5].map((star) => (
         <label key={star} className="cursor-pointer">
           <input type="radio" name="rating" value={star} className="peer sr-only" onChange={() => setRating(star)} />
-          <span className={`text-xl ${rating >= star ? "text-amber-400" : "text-muted-foreground"}`}>★</span>
+          <span className={`text-xl ${rating >= star ? "text-brand-gold" : "text-soft-gray/30"}`}>★</span>
         </label>
       ))}
     </div>

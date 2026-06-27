@@ -17,44 +17,59 @@ const config: Config = {
       }
     },
     extend: {
+      fontFamily: {
+        sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"]
+      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "#23272B",
+        input: "#586077",
+        ring: "#F9CC6F",
+        background: "#0A0A0A",
+        foreground: "#FFFFFF",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))"
+          DEFAULT: "#F9CC6F",
+          foreground: "#000000"
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))"
+          DEFAULT: "#1F2228",
+          foreground: "#BABDC5"
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))"
+          DEFAULT: "#23272B",
+          foreground: "#586077"
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))"
+          DEFAULT: "#F9CC6F",
+          foreground: "#000000"
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))"
+          DEFAULT: "#EF4444",
+          foreground: "#FFFFFF"
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))"
-        }
+          DEFAULT: "#1F2228",
+          foreground: "#FFFFFF"
+        },
+        "brand-gold": "#F9CC6F",
+        "dark-charcoal": "#1F2228",
+        "dark-surface": "#23272B",
+        "soft-gray": "#BABDC5",
+        "medium-gray": "#586077",
+        "success-green": "#22C55E",
+        "error-red": "#EF4444",
+        "warning-amber": "#F6BF4A"
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)"
+        lg: "12px",
+        md: "8px",
+        sm: "4px",
+        pill: "33554400px"
       },
       boxShadow: {
-        glow: "0 0 40px rgba(16, 185, 129, 0.18)"
+        l1: "0px 1px 3px rgba(0, 0, 0, 0.12)",
+        l2: "0px 4px 6px rgba(0, 0, 0, 0.16)",
+        l3: "0px 10px 15px rgba(0, 0, 0, 0.2)",
+        inset: "inset 0px 1px 2px rgba(0, 0, 0, 0.2)"
       },
       keyframes: {
         "fade-up": {
