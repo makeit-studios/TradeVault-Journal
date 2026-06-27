@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MobileNav } from "@/components/mobile-nav";
+import { SearchBar } from "@/components/search-bar";
 import { getInitials } from "@/lib/utils";
 
 export function TopNav({ user }: { user: { name?: string | null } }) {
@@ -10,6 +11,7 @@ export function TopNav({ user }: { user: { name?: string | null } }) {
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold">TV</div>
         </Link>
         <MobileNav />
+        <SearchBar />
         <div className="ml-auto flex items-center gap-3">
           <p className="hidden text-sm font-medium sm:block">{user.name ?? "Trader"}</p>
           <div className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-secondary text-sm font-semibold">

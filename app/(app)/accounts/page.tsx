@@ -23,7 +23,7 @@ export default async function AccountsPage() {
 
   return (
     <>
-      <PageHeader title="Accounts" description="Manage personal and prop firm accounts, balances, rules, and health." />
+      <PageHeader title="Accounts" description="" />
       <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
         <Card>
           <CardHeader>
@@ -134,3 +134,4 @@ const Metric = ({ label, value, tone }: { label: string; value: string; tone?: "
     </div>
   );
 };
+

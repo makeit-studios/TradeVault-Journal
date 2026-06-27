@@ -2,9 +2,12 @@ import type { InputHTMLAttributes } from "react";
 import { format } from "date-fns";
 import Link from "next/link";
 import { createTrade, deleteTrade } from "@/app/actions";
+import { Combobox } from "@/components/combobox";
 import { CsvImport } from "@/components/csv-import";
 import { ImageUpload } from "@/components/image-upload";
 import { PageHeader } from "@/components/page-header";
+import { PnlCalculator } from "@/components/pnl-calculator";
+import { StarRating } from "@/components/star-rating";
 import { TagSelector } from "@/components/tag-selector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,16 +20,34 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { formatCurrency } from "@/lib/utils";
 
-export default async function JournalPage() {
+export default async function JournalPage({ searchParams }: { searchParams: { search?: string } }) {
   const user = await requireUser();
-  const [accounts, trades] = await Promise.all([
+  const search = searchParams?.search?.trim().toLowerCase();
+  const tradeWhere = search
+    ? {
+        userId: user.id,
+        OR: [
+          { symbol: { contains: search } },
+          { strategyTag: { contains: search } },
+          { session: { contains: search } },
+          { notes: { contains: search } },
+          { account: { name: { contains: search } } }
+        ]
+      }
+    : { userId: user.id };
+
+  const [accounts, trades, existingSymbols, existingStrategies] = await Promise.all([
     prisma.tradingAccount.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-    prisma.trade.findMany({ where: { userId: user.id }, include: { account: true }, orderBy: { tradeDate: "desc" }, take: 100 })
+    prisma.trade.findMany({ where: tradeWhere, include: { account: true }, orderBy: { tradeDate: "desc" }, take: 100 }),
+    prisma.trade.findMany({ where: { userId: user.id, symbol: { not: "" } }, distinct: ["symbol"], select: { symbol: true } }),
+    prisma.trade.findMany({ where: { userId: user.id, strategyTag: { not: "" } }, distinct: ["strategyTag"], select: { strategyTag: true } })
   ]);
+  const symbols = existingSymbols.map((s) => s.symbol).filter(Boolean).sort();
+  const strategies = existingStrategies.map((s) => s.strategyTag).filter(Boolean).sort();
 
   return (
     <>
-      <PageHeader title="Trade Journal" description="Add new trades, then use Edit in trade history to update an existing entry." />
+      <PageHeader title="Trade Journal" description="" />
       <div className="grid gap-6 2xl:grid-cols-[440px_1fr]">
         <Card>
           <CardHeader>
@@ -54,18 +75,10 @@ export default async function JournalPage() {
               <p className="text-xs font-semibold text-muted-foreground">Trade Info</p>
               <div className="grid grid-cols-2 gap-3">
                 <Field name="tradeDate" label="Date" type="date" defaultValue={format(new Date(), "yyyy-MM-dd")} />
-                <div className="space-y-2">
-                  <Label>Session</Label>
-                  <select name="session" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="">Select session</option>
-                    <option>Asian</option>
-                    <option>London</option>
-                    <option>New York</option>
-                  </select>
-                </div>
+                <Combobox name="session" label="Session" options={["Asian", "London", "New York"]} placeholder="Select session" />
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <Field name="symbol" label="Instrument" placeholder="EURUSD, XAUUSD, NAS100..." />
+                <Combobox name="symbol" label="Instrument" options={symbols} placeholder="EURUSD, XAUUSD, NAS100..." />
                 <div className="space-y-2">
                   <Label>Direction</Label>
                   <select name="side" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
@@ -74,13 +87,13 @@ export default async function JournalPage() {
                   </select>
                 </div>
               </div>
-              <Field name="strategyTag" label="Strategy / Setup" placeholder="Liquidity sweep, FVG, Order block..." />
+              <Combobox name="strategyTag" label="Strategy / Setup" options={strategies} placeholder="Liquidity sweep, FVG, Order block..." />
 
-              <p className="text-xs font-semibold text-muted-foreground">Entry</p>
-              <Field name="entryPrice" label="Entry price" type="number" step="any" />
-
-              <p className="text-xs font-semibold text-muted-foreground">Exit</p>
-              <Field name="exitPrice" label="Exit price" type="number" step="any" />
+              <p className="text-xs font-semibold text-muted-foreground">Entry / Exit</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field name="entryPrice" label="Entry price" type="number" step="any" />
+                <Field name="exitPrice" label="Exit price" type="number" step="any" />
+              </div>
 
               <p className="text-xs font-semibold text-muted-foreground">Risk</p>
               <div className="grid grid-cols-2 gap-3">
@@ -88,6 +101,7 @@ export default async function JournalPage() {
                 <Field name="takeProfit" label="Take profit" type="number" step="any" required={false} />
               </div>
 
+              <PnlCalculator />
               <p className="text-xs font-semibold text-muted-foreground">Result</p>
               <Field name="profitLoss" label="Profit / loss" type="number" step="any" />
               <div className="rounded-md bg-secondary/40 p-3 text-sm">
@@ -109,14 +123,7 @@ export default async function JournalPage() {
                 </div>
                 <div className="mt-3 space-y-2">
                   <Label>Rating</Label>
-                  <div className="flex h-10 items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <label key={star} className="cursor-pointer">
-                        <input type="radio" name="rating" value={star} className="peer sr-only" />
-                        <span className="text-xl text-muted-foreground peer-checked:text-amber-400">★</span>
-                      </label>
-                    ))}
-                  </div>
+                  <StarRating />
                 </div>
                 <div className="mt-3 space-y-2">
                   <Label>Pre-trade plan</Label>
@@ -220,3 +227,4 @@ const Field = ({ label, ...props }: { label: string } & InputHTMLAttributes<HTML
     </div>
   );
 };
+

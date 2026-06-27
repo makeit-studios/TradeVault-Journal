@@ -25,8 +25,6 @@ const COLUMN_ALIASES: Record<string, string> = {
   riskPercent: "riskPercent", "risk %": "riskPercent", riskPct: "riskPercent"
 };
 
-const REQUIRED_COLUMNS = ["date", "symbol", "direction", "entry", "lotSize", "profitLoss"];
-
 function parseCSV(text: string): Record<string, string>[] {
   const lines = text.trim().split(/\r?\n/);
   if (lines.length < 2) return [];
@@ -99,65 +97,64 @@ export async function POST(request: Request) {
 
     for (let i = 0; i < rawTrades.length; i++) {
       const row = rawTrades[i];
-      const missing = REQUIRED_COLUMNS.filter((c) => !row[c]);
-      if (missing.length) {
-        errors.push({ row: i + 1, message: `Missing required columns: ${missing.join(", ")}` });
-        continue;
-      }
 
-      const side = row.direction.toUpperCase();
+      const side = row.direction?.toUpperCase();
       if (side !== "BUY" && side !== "SELL") {
         errors.push({ row: i + 1, message: `Invalid direction "${row.direction}". Use BUY or SELL.` });
         continue;
       }
 
-      const entry = Number(row.entry);
-      const exit = row.exit ? Number(row.exit) : undefined;
+      const entry = row.entry ? Number(row.entry) : null;
+      const exit = row.exit ? Number(row.exit) : null;
       const sl = row.stopLoss ? Number(row.stopLoss) : null;
       const tp = row.takeProfit ? Number(row.takeProfit) : null;
-      const lotSize = Number(row.lotSize);
-      const pnl = Number(row.profitLoss);
-
-      if (!Number.isFinite(entry)) { errors.push({ row: i + 1, message: "Invalid entry price." }); continue; }
-      if (!Number.isFinite(lotSize) || lotSize <= 0) { errors.push({ row: i + 1, message: "Invalid lot size." }); continue; }
-      if (!Number.isFinite(pnl)) { errors.push({ row: i + 1, message: "Invalid profit/loss." }); continue; }
+      const lotSize = row.lotSize ? Number(row.lotSize) : null;
+      const pnl = row.profitLoss ? Number(row.profitLoss) : null;
 
       const accountName = row.accountName ?? "";
       const matchedAccount = accountName ? accounts.find((a) => a.name.toLowerCase() === accountName.toLowerCase()) : undefined;
       const accountId = matchedAccount?.id ?? defaultAccountId;
 
-      await prisma.trade.create({
-        data: {
-          userId: session.user.id,
-          accountId,
-          symbol: row.symbol.toUpperCase(),
-          side,
-          entryPrice: entry,
-          exitPrice: exit ?? null,
-          stopLoss: sl,
-          takeProfit: tp,
-          lotSize,
-          riskPercent: row.riskPercent ? Number(row.riskPercent) : 0,
-          profitLoss: pnl,
-          status: row.status || calcStatus(pnl),
-          rrRatio: calcRR(entry, sl, tp),
-          rMultiple: calcRMultiple(entry, sl, pnl, lotSize),
-          rating: row.rating ? Number(row.rating) : null,
-          tradeDate: new Date(row.date),
-          session: row.session || "",
-          strategyTag: row.strategy || "",
-          emotions: row.emotions || null,
-          mistakes: row.mistakes || null,
-          notes: row.notes || null
+      const symbol = row.symbol?.toUpperCase() || "UNKNOWN";
+
+      try {
+        await prisma.trade.create({
+          data: {
+            userId: session.user.id,
+            accountId,
+            symbol,
+            side,
+            entryPrice: entry ?? 0,
+            exitPrice: exit,
+            stopLoss: sl,
+            takeProfit: tp,
+            lotSize: lotSize ?? 0,
+            riskPercent: row.riskPercent ? Number(row.riskPercent) : 0,
+            profitLoss: pnl ?? 0,
+            status: row.status || (pnl !== null ? calcStatus(pnl) : "PENDING"),
+            rrRatio: entry !== null && sl !== null && tp !== null ? calcRR(entry, sl, tp) : null,
+            rMultiple: entry !== null && sl !== null && pnl !== null && lotSize !== null ? calcRMultiple(entry, sl, pnl, lotSize) : null,
+            rating: row.rating ? Number(row.rating) : null,
+            tradeDate: row.date ? new Date(row.date) : new Date(),
+            session: row.session || "",
+            strategyTag: row.strategy || "",
+            emotions: row.emotions || null,
+            mistakes: row.mistakes || null,
+            notes: row.notes || null
+          }
+        });
+
+        if (pnl !== null) {
+          await prisma.tradingAccount.update({
+            where: { id: accountId },
+            data: { currentBalance: { increment: pnl } }
+          });
         }
-      });
 
-      await prisma.tradingAccount.update({
-        where: { id: accountId },
-        data: { currentBalance: { increment: pnl } }
-      });
-
-      imported++;
+        imported++;
+      } catch (err) {
+        errors.push({ row: i + 1, message: err instanceof Error ? err.message : "Row import failed" });
+      }
     }
 
     return NextResponse.json({ imported, errors, total: rawTrades.length });

@@ -13,7 +13,7 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" description="Manage your profile and workspace preferences." />
+      <PageHeader title="Settings" description="" />
       <div className="grid gap-6 xl:grid-cols-2">
         <Card>
           <CardHeader>
@@ -49,3 +49,4 @@ export default async function SettingsPage() {
     </>
   );
 }
+

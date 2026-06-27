@@ -2,8 +2,10 @@ import type { InputHTMLAttributes } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { updateTrade } from "@/app/actions";
+import { Combobox } from "@/components/combobox";
 import { ImageUpload } from "@/components/image-upload";
 import { PageHeader } from "@/components/page-header";
+import { StarRating } from "@/components/star-rating";
 import { TagSelector } from "@/components/tag-selector";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,10 +17,14 @@ import { requireUser } from "@/lib/session";
 
 export default async function EditTradePage({ params }: { params: { id: string } }) {
   const user = await requireUser();
-  const [trade, accounts] = await Promise.all([
+  const [trade, accounts, existingSymbols, existingStrategies] = await Promise.all([
     prisma.trade.findFirstOrThrow({ where: { id: params.id, userId: user.id } }),
-    prisma.tradingAccount.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } })
+    prisma.tradingAccount.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
+    prisma.trade.findMany({ where: { userId: user.id, symbol: { not: "" } }, distinct: ["symbol"], select: { symbol: true } }),
+    prisma.trade.findMany({ where: { userId: user.id, strategyTag: { not: "" } }, distinct: ["strategyTag"], select: { strategyTag: true } })
   ]);
+  const symbols = existingSymbols.map((s) => s.symbol).filter(Boolean).sort();
+  const strategies = existingStrategies.map((s) => s.strategyTag).filter(Boolean).sort();
 
   return (
     <>
@@ -46,18 +52,10 @@ export default async function EditTradePage({ params }: { params: { id: string }
             <p className="text-xs font-semibold text-muted-foreground">Trade Info</p>
             <div className="grid grid-cols-2 gap-3">
               <Field name="tradeDate" label="Date" type="date" defaultValue={format(trade.tradeDate, "yyyy-MM-dd")} />
-              <div className="space-y-2">
-                <Label>Session</Label>
-                <select name="session" defaultValue={trade.session} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-                  <option value="">Select session</option>
-                  <option>Asian</option>
-                  <option>London</option>
-                  <option>New York</option>
-                </select>
-              </div>
+              <Combobox name="session" label="Session" options={["Asian", "London", "New York"]} placeholder="Select session" defaultValue={trade.session || ""} />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <Field name="symbol" label="Instrument" defaultValue={trade.symbol} />
+              <Combobox name="symbol" label="Instrument" options={symbols} defaultValue={trade.symbol} />
               <div className="space-y-2">
                 <Label>Direction</Label>
                 <select name="side" defaultValue={trade.side} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
@@ -65,13 +63,13 @@ export default async function EditTradePage({ params }: { params: { id: string }
                 </select>
               </div>
             </div>
-            <Field name="strategyTag" label="Strategy / Setup" defaultValue={trade.strategyTag} />
+            <Combobox name="strategyTag" label="Strategy / Setup" options={strategies} defaultValue={trade.strategyTag || ""} />
 
-            <p className="text-xs font-semibold text-muted-foreground">Entry</p>
-            <Field name="entryPrice" label="Entry price" type="number" step="any" defaultValue={trade.entryPrice} />
-
-            <p className="text-xs font-semibold text-muted-foreground">Exit</p>
-            <Field name="exitPrice" label="Exit price" type="number" step="any" defaultValue={trade.exitPrice ?? ""} />
+            <p className="text-xs font-semibold text-muted-foreground">Entry / Exit</p>
+            <div className="grid grid-cols-2 gap-3">
+              <Field name="entryPrice" label="Entry price" type="number" step="any" defaultValue={trade.entryPrice} />
+              <Field name="exitPrice" label="Exit price" type="number" step="any" defaultValue={trade.exitPrice ?? ""} />
+            </div>
 
             <p className="text-xs font-semibold text-muted-foreground">Risk</p>
             <div className="grid grid-cols-2 gap-3">
@@ -100,14 +98,7 @@ export default async function EditTradePage({ params }: { params: { id: string }
               </div>
               <div className="mt-3 space-y-2">
                 <Label>Rating</Label>
-                <div className="flex h-10 items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <label key={star} className="cursor-pointer">
-                      <input type="radio" name="rating" value={star} defaultChecked={trade.rating === star} className="peer sr-only" />
-                      <span className="text-xl text-muted-foreground peer-checked:text-amber-400">★</span>
-                    </label>
-                  ))}
-                </div>
+                <StarRating />
               </div>
               <div className="mt-3 space-y-2">
                 <Label>Pre-trade plan</Label>

@@ -28,7 +28,7 @@ export default async function DashboardPage() {
     <>
       <PageHeader
         title="Dashboard"
-        description="Your trading performance, prop firm health, and recent execution at a glance."
+        description=""
         action={
           <Button asChild>
             <Link href="/journal">
@@ -151,3 +151,4 @@ export default async function DashboardPage() {
     </>
   );
 }
+

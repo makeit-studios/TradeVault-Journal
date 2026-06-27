@@ -18,7 +18,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: { m
 
   return (
     <>
-      <PageHeader title="Trading Calendar" description="Tap a day to see trades. Daily P/L colored by session outcome." />
+      <PageHeader title="Trading Calendar" description="" />
       <Card>
         <CardContent className="p-5">
           <div className="mb-4 flex items-center justify-between">
@@ -62,3 +62,4 @@ export default async function CalendarPage({ searchParams }: { searchParams: { m
     </>
   );
 }
+

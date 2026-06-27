@@ -1,10 +1,10 @@
 import { format } from "date-fns";
 import { EquityChart, PnlBarChart, WinLossPie, WinRateChart } from "@/components/charts-lazy";
-import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { buildEquityCurve, buildMonthlyPnl, groupPnlBy } from "@/lib/analytics";
+import { buildEquityCurve, buildMonthlyPnl, groupPnlBy, summarizeTrades } from "@/lib/analytics";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/session";
+import { cn, formatCurrency } from "@/lib/utils";
 
 export default async function AnalyticsPage() {
   const user = await requireUser();
@@ -13,6 +13,7 @@ export default async function AnalyticsPage() {
     prisma.tradingAccount.findMany({ where: { userId: user.id }, select: { startingBalance: true } })
   ]);
   const startingBalance = accounts.reduce((sum, account) => sum + account.startingBalance, 0);
+  const summary = summarizeTrades(trades);
   const wins = trades.filter((trade) => trade.profitLoss > 0).length;
   const losses = trades.filter((trade) => trade.profitLoss < 0).length;
   const runningWinRate = trades.map((trade, index) => ({
@@ -20,58 +21,61 @@ export default async function AnalyticsPage() {
     winRate: (trades.slice(0, index + 1).filter((item) => item.profitLoss > 0).length / (index + 1)) * 100
   }));
 
+  const metrics: Array<{ label: string; value: string; tone: "up" | "down" | null }> = [
+    { label: "Total P/L", value: formatCurrency(summary.totalPnl), tone: summary.totalPnl >= 0 ? "up" : "down" },
+    { label: "Win Rate", value: `${summary.winRate.toFixed(1)}%`, tone: summary.winRate >= 50 ? "up" : "down" },
+    { label: "Total Trades", value: String(summary.totalTrades), tone: null },
+    { label: "Profit Factor", value: summary.profitFactor === Infinity ? "∞" : summary.profitFactor.toFixed(2), tone: summary.profitFactor >= 1.5 ? "up" : summary.profitFactor < 1 ? "down" : null },
+    { label: "Best Trade", value: formatCurrency(summary.bestTrade), tone: "up" },
+    { label: "Worst Trade", value: formatCurrency(summary.worstTrade), tone: "down" },
+  ];
+
   return (
     <>
-      <PageHeader title="Analytics" description="Lightweight charts that reveal edge, consistency, and weak spots." />
-      <div className="grid gap-4 xl:grid-cols-2">
-        <Card className="xl:col-span-2">
-          <CardHeader>
-            <CardTitle>Equity curve</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <EquityChart data={buildEquityCurve(trades, startingBalance)} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Win / loss split</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <WinLossPie wins={wins} losses={losses} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Win rate trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <WinRateChart data={runningWinRate} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance by symbol</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PnlBarChart data={groupPnlBy(trades, "symbol")} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance by strategy</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PnlBarChart data={groupPnlBy(trades, "strategyTag")} />
-          </CardContent>
-        </Card>
-        <Card className="xl:col-span-2">
-          <CardHeader>
-            <CardTitle>Monthly P/L</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PnlBarChart data={buildMonthlyPnl(trades)} nameKey="month" />
-          </CardContent>
-        </Card>
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-white">Analytics</h1>
+        <p className="mt-1 text-sm text-[#BABDC5]">Performance metrics and trade analysis</p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {metrics.map((m) => (
+          <div key={m.label} className="rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+            <p className="text-sm text-[#BABDC5]">{m.label}</p>
+            <p className={cn("mt-1 text-2xl font-semibold", m.tone === "up" && "text-[#22C55E]", m.tone === "down" && "text-[#EF4444]", !m.tone && "text-white")}>{m.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+        <div className="xl:col-span-2 rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+          <h3 className="mb-4 text-sm font-medium text-white">Equity curve</h3>
+          <EquityChart data={buildEquityCurve(trades, startingBalance)} />
+        </div>
+
+        <div className="rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+          <h3 className="mb-4 text-sm font-medium text-white">Win / loss split</h3>
+          <WinLossPie wins={wins} losses={losses} />
+        </div>
+
+        <div className="rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+          <h3 className="mb-4 text-sm font-medium text-white">Win rate trend</h3>
+          <WinRateChart data={runningWinRate} />
+        </div>
+
+        <div className="rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+          <h3 className="mb-4 text-sm font-medium text-white">By symbol</h3>
+          <PnlBarChart data={groupPnlBy(trades, "symbol")} />
+        </div>
+
+        <div className="rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+          <h3 className="mb-4 text-sm font-medium text-white">By strategy</h3>
+          <PnlBarChart data={groupPnlBy(trades, "strategyTag")} />
+        </div>
+
+        <div className="xl:col-span-2 rounded-xl border border-[#23272B] bg-[#1F2228] p-5">
+          <h3 className="mb-4 text-sm font-medium text-white">Monthly P/L</h3>
+          <PnlBarChart data={buildMonthlyPnl(trades)} nameKey="month" />
+        </div>
       </div>
     </>
   );

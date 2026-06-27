@@ -20,7 +20,7 @@ export default async function PsychologyPage() {
 
   return (
     <>
-      <PageHeader title="Psychology" description="Capture emotions, confidence, mistakes, and reflections while the day is still fresh." />
+      <PageHeader title="Psychology" description="" />
       <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
         <Card>
           <CardHeader><CardTitle>New entry</CardTitle></CardHeader>
@@ -76,3 +76,4 @@ const Field = ({ label, ...props }: { label: string } & InputHTMLAttributes<HTML
 const Note = ({ label, value, className }: { label: string; value: string; className?: string }) => {
   return <div className={className}><p className="text-xs uppercase text-muted-foreground">{label}</p><p className="mt-1 text-sm leading-6">{value}</p></div>;
 };
+

@@ -36,8 +36,8 @@ export function ImageUpload({ name, label }: ImageUploadProps) {
         className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-secondary/80"
       />
       {preview ? (
-        <div className="relative mt-2 h-32 w-full overflow-hidden rounded-md border border-border">
-          <Image src={preview} alt={label} fill className="object-cover" />
+        <div className="relative mt-2 h-48 w-full rounded-md border border-border bg-black/20">
+          <Image src={preview} alt={label} fill className="object-contain" />
         </div>
       ) : null}
     </div>

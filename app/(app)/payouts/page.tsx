@@ -34,7 +34,7 @@ export default async function PayoutsPage() {
 
   return (
     <>
-      <PageHeader title="Payouts" description="Track requested, pending, and approved withdrawals across accounts." />
+      <PageHeader title="Payouts" description="" />
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard label="Approved payouts" value={formatCurrency(total)} hint="Received from funded or personal accounts" icon={CheckCircle} tone="positive" />
         <StatCard label="Pending payouts" value={formatCurrency(pending)} hint="Requested or awaiting approval" icon={Clock} />
@@ -103,3 +103,4 @@ export default async function PayoutsPage() {
 const Field = ({ label, ...props }: { label: string } & InputHTMLAttributes<HTMLInputElement>) => {
   return <div className="space-y-2"><Label>{label}</Label><Input required {...props} /></div>;
 };
+
